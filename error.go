@@ -10,15 +10,15 @@ func NewPathError(message, path string) error {
 }
 
 type PathError struct {
-	message string
-	path    string
-	stack   []string
+	Message string
+	Path    string
+	Stack   []string
 }
 
 func (e *PathError) Error() string {
-	return fmt.Sprintf("%s: about %q: at %s", e.message, e.path, strings.Join(e.stack, "/")+"/")
+	return fmt.Sprintf("%s: about %q: at %s", e.Message, e.Path, strings.Join(e.Stack, "/")+"/")
 }
 
 func (e *PathError) PushPath(path string) {
-	e.stack = append(e.stack, path)
+	e.Stack = append(e.Stack, path)
 }
