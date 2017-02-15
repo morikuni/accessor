@@ -20,8 +20,8 @@ func getFromChild(child Object, path string, paths []string) (Object, error) {
 }
 
 // paths must not be empty.
-func setToChild(child Object, path string, paths []string) error {
-	err := child.Set(child, paths[0], paths[1:]...)
+func setToChild(child, obj Object, path string, paths []string) error {
+	err := child.Set(obj, paths[0], paths[1:]...)
 	if err != nil {
 		if pe, ok := err.(pathPusher); ok {
 			pe.PushPath(path)

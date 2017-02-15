@@ -22,5 +22,5 @@ func (o MapObject) Set(obj Object, path string, paths ...string) error {
 		return nil
 	}
 
-	return setToChild(child, path, paths)
+	return setToChild(child, obj, path, paths)
 }

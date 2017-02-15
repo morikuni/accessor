@@ -34,5 +34,5 @@ func (o SliceObject) Set(obj Object, path string, paths ...string) error {
 		return nil
 	}
 
-	return setToChild(o[i], path, paths)
+	return setToChild(o[i], obj, path, paths)
 }
