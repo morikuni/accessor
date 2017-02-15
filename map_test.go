@@ -66,7 +66,7 @@ func TestMapObject_Get(t *testing.T) {
 			Expect: Expect{
 				Object: nil,
 				Err: &PathError{
-					Message: "no such path",
+					Message: "no such key",
 					Path:    "x",
 					Stack:   nil,
 				},
@@ -88,7 +88,7 @@ func TestMapObject_Get(t *testing.T) {
 			Expect: Expect{
 				Object: nil,
 				Err: &PathError{
-					Message: "no such path",
+					Message: "no such key",
 					Path:    "x",
 					Stack:   []string{"b", "a"},
 				},
@@ -181,7 +181,7 @@ func TestMapObject_Set(t *testing.T) {
 					"a": DummyObject{1},
 				}),
 				Err: &PathError{
-					Message: "no such path",
+					Message: "no such key",
 					Path:    "x",
 					Stack:   nil,
 				},
@@ -210,7 +210,7 @@ func TestMapObject_Set(t *testing.T) {
 					}),
 				}),
 				Err: &PathError{
-					Message: "no such path",
+					Message: "no such key",
 					Path:    "x",
 					Stack:   []string{"b", "a"},
 				},

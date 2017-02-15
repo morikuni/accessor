@@ -5,7 +5,7 @@ type MapObject map[string]Object
 func (o MapObject) Get(path string, paths ...string) (Object, error) {
 	child, ok := o[path]
 	if !ok {
-		return nil, NewPathError("no such path", path)
+		return nil, NewPathError("no such key", path)
 	}
 
 	return getFromChild(child, path, paths)
@@ -14,7 +14,7 @@ func (o MapObject) Get(path string, paths ...string) (Object, error) {
 func (o MapObject) Set(obj Object, path string, paths ...string) error {
 	child, ok := o[path]
 	if !ok {
-		return NewPathError("no such path", path)
+		return NewPathError("no such key", path)
 	}
 
 	if len(paths) == 0 {
