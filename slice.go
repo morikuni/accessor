@@ -12,7 +12,7 @@ func (o SliceObject) Get(path string, paths ...string) (Object, error) {
 		return nil, NewPathError("not a number", path)
 	}
 
-	if i < 0 || i >= len(paths) {
+	if i < 0 || i >= len(o) {
 		return nil, NewPathError("index out of range", path)
 	}
 
@@ -25,7 +25,7 @@ func (o SliceObject) Set(obj Object, path string, paths ...string) error {
 		return NewPathError("not a number", path)
 	}
 
-	if i < 0 || i >= len(paths) {
+	if i < 0 || i >= len(o) {
 		return NewPathError("index out of range", path)
 	}
 
