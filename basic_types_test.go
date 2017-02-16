@@ -45,6 +45,11 @@ func TestBasicType_Get(t *testing.T) {
 			Input:  Input{time.Date(1992, 06, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
 		},
+		Test{
+			Title:  "nil",
+			Input:  Input{nil},
+			Expect: Expect{"<nil>(<nil>) has no key"},
+		},
 	}
 
 	for _, testCase := range table {
@@ -102,6 +107,11 @@ func TestBasicType_Set(t *testing.T) {
 			Title:  "time.Time",
 			Input:  Input{time.Date(1992, 06, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
+		},
+		Test{
+			Title:  "nil",
+			Input:  Input{nil},
+			Expect: Expect{"<nil>(<nil>) has no key"},
 		},
 	}
 
