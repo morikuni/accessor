@@ -34,3 +34,15 @@ type InvalidKeyError struct {
 func (e *InvalidKeyError) Error() string {
 	return fmt.Sprintf("%T is not a string", e.Value)
 }
+
+func NewInvalidPathError(path string) error {
+	return &InvalidPathError{path}
+}
+
+type InvalidPathError struct {
+	Path string
+}
+
+func (e *InvalidPathError) Error() string {
+	return fmt.Sprintf("path is invalid: %q", e.Path)
+}
