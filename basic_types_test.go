@@ -42,7 +42,7 @@ func TestBasicType_Get(t *testing.T) {
 		},
 		Test{
 			Title:  "time.Time",
-			Input:  Input{time.Date(1992, 06, 18, 12, 34, 56, 00, time.UTC)},
+			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
 		},
 		Test{
@@ -105,7 +105,7 @@ func TestBasicType_Set(t *testing.T) {
 		},
 		Test{
 			Title:  "time.Time",
-			Input:  Input{time.Date(1992, 06, 18, 12, 34, 56, 00, time.UTC)},
+			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
 		},
 		Test{
