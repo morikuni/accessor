@@ -24,3 +24,11 @@ func (o MapObject) Set(obj Object, path string, paths ...string) error {
 
 	return setToChild(child, obj, path, paths)
 }
+
+func (o MapObject) Unwrap() interface{} {
+	result := map[string]interface{}{}
+	for k, v := range o {
+		result[k] = v.Unwrap()
+	}
+	return result
+}

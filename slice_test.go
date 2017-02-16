@@ -269,3 +269,60 @@ func TestSliceObject_Set(t *testing.T) {
 		})
 	}
 }
+
+func TestSliceObject_Unwrap(t *testing.T) {
+	type Input struct {
+		Object Object
+	}
+	type Expect struct {
+		Object interface{}
+	}
+	type Test struct {
+		Title  string
+		Input  Input
+		Expect Expect
+	}
+
+	table := []Test{
+		Test{
+			Title: "success",
+			Input: Input{
+				Object: SliceObject([]Object{
+					DummyObject{1},
+				}),
+			},
+			Expect: Expect{
+				Object: []interface{}{1},
+			},
+		},
+		Test{
+			Title: "success nested",
+			Input: Input{
+				Object: SliceObject([]Object{
+					SliceObject([]Object{
+						SliceObject([]Object{
+							DummyObject{1},
+						}),
+					}),
+				}),
+			},
+			Expect: Expect{
+				Object: []interface{}{
+					[]interface{}{
+						[]interface{}{
+							1,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, testCase := range table {
+		t.Run(testCase.Title, func(t *testing.T) {
+			assert := assert.New(t)
+
+			assert.Equal(testCase.Expect.Object, testCase.Input.Object.Unwrap())
+		})
+	}
+}

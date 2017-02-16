@@ -131,3 +131,58 @@ func TestBasicType_Set(t *testing.T) {
 		})
 	}
 }
+
+func TestBasicType_Unwrap(t *testing.T) {
+	type Input struct {
+		Value interface{}
+	}
+	type Expect struct {
+		Value interface{}
+	}
+	type Test struct {
+		Title  string
+		Input  Input
+		Expect Expect
+	}
+
+	table := []Test{
+		Test{
+			Title:  "int",
+			Input:  Input{1},
+			Expect: Expect{1},
+		},
+		Test{
+			Title:  "float",
+			Input:  Input{1.2},
+			Expect: Expect{1.2},
+		},
+		Test{
+			Title:  "string",
+			Input:  Input{"hello"},
+			Expect: Expect{"hello"},
+		},
+		Test{
+			Title:  "bool",
+			Input:  Input{true},
+			Expect: Expect{true},
+		},
+		Test{
+			Title:  "time.Time",
+			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
+			Expect: Expect{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
+		},
+		Test{
+			Title:  "nil",
+			Input:  Input{nil},
+			Expect: Expect{nil},
+		},
+	}
+
+	for _, testCase := range table {
+		t.Run(testCase.Title, func(t *testing.T) {
+			assert := assert.New(t)
+
+			assert.Equal(testCase.Expect.Value, BasicTypes{testCase.Input.Value}.Unwrap())
+		})
+	}
+}

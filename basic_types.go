@@ -18,6 +18,10 @@ func (o BasicTypes) Set(obj Object, path string, paths ...string) error {
 	return NewPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", o.Value), path)
 }
 
+func (o BasicTypes) Unwrap() interface{} {
+	return o.Value
+}
+
 func (o BasicTypes) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.Value)
 }

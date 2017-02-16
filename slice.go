@@ -36,3 +36,11 @@ func (o SliceObject) Set(obj Object, path string, paths ...string) error {
 
 	return setToChild(o[i], obj, path, paths)
 }
+
+func (o SliceObject) Unwrap() interface{} {
+	result := make([]interface{}, len(o))
+	for i, v := range o {
+		result[i] = v.Unwrap()
+	}
+	return result
+}

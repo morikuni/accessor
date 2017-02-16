@@ -230,3 +230,62 @@ func TestMapObject_Set(t *testing.T) {
 		})
 	}
 }
+
+func TestMapObject_Unwrap(t *testing.T) {
+	type Input struct {
+		Object Object
+	}
+	type Expect struct {
+		Object interface{}
+	}
+	type Test struct {
+		Title  string
+		Input  Input
+		Expect Expect
+	}
+
+	table := []Test{
+		Test{
+			Title: "success",
+			Input: Input{
+				Object: MapObject(map[string]Object{
+					"a": DummyObject{1},
+				}),
+			},
+			Expect: Expect{
+				Object: map[string]interface{}{
+					"a": 1,
+				},
+			},
+		},
+		Test{
+			Title: "success nested",
+			Input: Input{
+				Object: MapObject(map[string]Object{
+					"a": MapObject(map[string]Object{
+						"b": MapObject(map[string]Object{
+							"c": DummyObject{1},
+						}),
+					}),
+				}),
+			},
+			Expect: Expect{
+				Object: map[string]interface{}{
+					"a": map[string]interface{}{
+						"b": map[string]interface{}{
+							"c": 1,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, testCase := range table {
+		t.Run(testCase.Title, func(t *testing.T) {
+			assert := assert.New(t)
+
+			assert.Equal(testCase.Expect.Object, testCase.Input.Object.Unwrap())
+		})
+	}
+}

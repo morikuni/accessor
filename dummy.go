@@ -15,3 +15,7 @@ func (o DummyObject) Get(path string, paths ...string) (Object, error) {
 func (o DummyObject) Set(obj Object, path string, paths ...string) error {
 	return fmt.Errorf("this is dummy object: %d", o.ID)
 }
+
+func (o DummyObject) Unwrap() interface{} {
+	return o.ID
+}

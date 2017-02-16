@@ -9,4 +9,7 @@ type Object interface {
 	// Set set a object into specific path.
 	// PathError is returned when the path is invalid.
 	Set(obj Object, path string, paths ...string) error
+
+	// Unwrap unwraps the object and returns actual value.
+	Unwrap() interface{}
 }
