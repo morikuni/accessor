@@ -26,6 +26,9 @@ func (o BasicTypes) MarshalText() ([]byte, error) {
 	if m, ok := o.Value.(encoding.TextMarshaler); ok {
 		return m.MarshalText()
 	}
+	if s, ok := o.Value.(fmt.Stringer); ok {
+		return []byte(s.String()), nil
+	}
 	return []byte(fmt.Sprint(o.Value)), nil
 }
 
