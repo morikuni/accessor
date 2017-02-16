@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestBasicType_Get(t *testing.T) {
+func TestValueObject_Get(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -56,7 +56,7 @@ func TestBasicType_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			bt := BasicTypes{testCase.Input.Value}
+			bt := ValueObject{testCase.Input.Value}
 			o, err := bt.Get("a")
 
 			assert.Nil(o)
@@ -69,7 +69,7 @@ func TestBasicType_Get(t *testing.T) {
 	}
 }
 
-func TestBasicType_Set(t *testing.T) {
+func TestValueObject_Set(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -119,7 +119,7 @@ func TestBasicType_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			bt := BasicTypes{testCase.Input.Value}
+			bt := ValueObject{testCase.Input.Value}
 			err := bt.Set(DummyObject{1}, "a")
 
 			assert.Equal(bt.Value, testCase.Input.Value)
@@ -132,7 +132,7 @@ func TestBasicType_Set(t *testing.T) {
 	}
 }
 
-func TestBasicType_Unwrap(t *testing.T) {
+func TestValueObject_Unwrap(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -182,7 +182,7 @@ func TestBasicType_Unwrap(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			assert.Equal(testCase.Expect.Value, BasicTypes{testCase.Input.Value}.Unwrap())
+			assert.Equal(testCase.Expect.Value, ValueObject{testCase.Input.Value}.Unwrap())
 		})
 	}
 }

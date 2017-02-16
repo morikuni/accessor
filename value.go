@@ -6,27 +6,27 @@ import (
 	"fmt"
 )
 
-type BasicTypes struct {
+type ValueObject struct {
 	Value interface{}
 }
 
-func (o BasicTypes) Get(path string, paths ...string) (Object, error) {
+func (o ValueObject) Get(path string, paths ...string) (Object, error) {
 	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", o.Value), path)
 }
 
-func (o BasicTypes) Set(obj Object, path string, paths ...string) error {
+func (o ValueObject) Set(obj Object, path string, paths ...string) error {
 	return NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", o.Value), path)
 }
 
-func (o BasicTypes) Unwrap() interface{} {
+func (o ValueObject) Unwrap() interface{} {
 	return o.Value
 }
 
-func (o BasicTypes) MarshalJSON() ([]byte, error) {
+func (o ValueObject) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.Value)
 }
 
-func (o BasicTypes) MarshalText() ([]byte, error) {
+func (o ValueObject) MarshalText() ([]byte, error) {
 	if m, ok := o.Value.(encoding.TextMarshaler); ok {
 		return m.MarshalText()
 	}
@@ -36,6 +36,6 @@ func (o BasicTypes) MarshalText() ([]byte, error) {
 	return []byte(fmt.Sprint(o.Value)), nil
 }
 
-func (o BasicTypes) MarshalYAML() (interface{}, error) {
+func (o ValueObject) MarshalYAML() (interface{}, error) {
 	return o.Value, nil
 }

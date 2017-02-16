@@ -31,7 +31,7 @@ func TestConvert(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: MapObject(map[string]Object{
-					"int": BasicTypes{1},
+					"int": ValueObject{1},
 				}),
 				Err: nil,
 			},
@@ -45,7 +45,7 @@ func TestConvert(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: MapObject(map[string]Object{
-					"int": BasicTypes{1},
+					"int": ValueObject{1},
 				}),
 				Err: nil,
 			},
@@ -61,9 +61,9 @@ func TestConvert(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: SliceObject([]Object{
-					BasicTypes{1},
-					BasicTypes{"string"},
-					BasicTypes{true},
+					ValueObject{1},
+					ValueObject{"string"},
+					ValueObject{true},
 				}),
 				Err: nil,
 			},
@@ -74,7 +74,7 @@ func TestConvert(t *testing.T) {
 				Value: time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC),
 			},
 			Expect: Expect{
-				Object: BasicTypes{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
+				Object: ValueObject{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
 				Err:    nil,
 			},
 		},
@@ -98,18 +98,18 @@ func TestConvert(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: MapObject(map[string]Object{
-					"name": BasicTypes{"me"},
-					"age":  BasicTypes{18},
+					"name": ValueObject{"me"},
+					"age":  ValueObject{18},
 					"friends": SliceObject([]Object{
 						MapObject(map[string]Object{
-							"name": BasicTypes{"hello"},
+							"name": ValueObject{"hello"},
 						}),
 						MapObject(map[string]Object{
-							"name": BasicTypes{"world"},
+							"name": ValueObject{"world"},
 						}),
 					}),
-					"birthday": BasicTypes{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
-					"nickname": BasicTypes{nil},
+					"birthday": ValueObject{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
+					"nickname": ValueObject{nil},
 				}),
 				Err: nil,
 			},

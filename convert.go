@@ -37,6 +37,6 @@ func Convert(obj interface{}) (Object, error) {
 		}
 		return SliceObject(so), nil
 	default:
-		return BasicTypes{t}, nil
+		return ValueObject{t}, nil
 	}
 }
