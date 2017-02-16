@@ -22,3 +22,15 @@ func (e *PathError) Error() string {
 func (e *PathError) PushPath(path string) {
 	e.Stack = append(e.Stack, path)
 }
+
+func NewInvalidKeyError(v interface{}) error {
+	return &InvalidKeyError{v}
+}
+
+type InvalidKeyError struct {
+	Value interface{}
+}
+
+func (e *InvalidKeyError) Error() string {
+	return fmt.Sprintf("%T is not a string", e.Value)
+}
