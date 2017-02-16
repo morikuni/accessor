@@ -5,21 +5,21 @@ import (
 	"strings"
 )
 
-func NewPathError(message, path string) error {
-	return &PathError{message, path, nil}
+func NewNoSuchPathError(message, path string) error {
+	return &NoSuchPathError{message, path, nil}
 }
 
-type PathError struct {
+type NoSuchPathError struct {
 	Message string
 	Path    string
 	Stack   []string
 }
 
-func (e *PathError) Error() string {
+func (e *NoSuchPathError) Error() string {
 	return fmt.Sprintf("%s: about %q: at %s", e.Message, e.Path, strings.Join(e.Stack, "/")+"/")
 }
 
-func (e *PathError) PushPath(path string) {
+func (e *NoSuchPathError) PushPath(path string) {
 	e.Stack = append(e.Stack, path)
 }
 

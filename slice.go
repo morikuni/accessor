@@ -9,11 +9,11 @@ type SliceObject []Object
 func (o SliceObject) Get(path string, paths ...string) (Object, error) {
 	i, err := strconv.Atoi(path)
 	if err != nil {
-		return nil, NewPathError("not a number", path)
+		return nil, NewNoSuchPathError("not a number", path)
 	}
 
 	if i < 0 || i >= len(o) {
-		return nil, NewPathError("index out of range", path)
+		return nil, NewNoSuchPathError("index out of range", path)
 	}
 
 	return getFromChild(o[i], path, paths)
@@ -22,11 +22,11 @@ func (o SliceObject) Get(path string, paths ...string) (Object, error) {
 func (o SliceObject) Set(obj Object, path string, paths ...string) error {
 	i, err := strconv.Atoi(path)
 	if err != nil {
-		return NewPathError("not a number", path)
+		return NewNoSuchPathError("not a number", path)
 	}
 
 	if i < 0 || i >= len(o) {
-		return NewPathError("index out of range", path)
+		return NewNoSuchPathError("index out of range", path)
 	}
 
 	if len(paths) == 0 {

@@ -60,7 +60,7 @@ func TestBasicType_Get(t *testing.T) {
 			o, err := bt.Get("a")
 
 			assert.Nil(o)
-			assert.Equal(&PathError{
+			assert.Equal(&NoSuchPathError{
 				Message: testCase.Expect.ErrorMessage,
 				Path:    "a",
 				Stack:   nil,
@@ -123,7 +123,7 @@ func TestBasicType_Set(t *testing.T) {
 			err := bt.Set(DummyObject{1}, "a")
 
 			assert.Equal(bt.Value, testCase.Input.Value)
-			assert.Equal(&PathError{
+			assert.Equal(&NoSuchPathError{
 				Message: testCase.Expect.ErrorMessage,
 				Path:    "a",
 				Stack:   nil,

@@ -65,7 +65,7 @@ func TestSliceObject_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: nil,
-				Err: &PathError{
+				Err: &NoSuchPathError{
 					Message: "not a number",
 					Path:    "x",
 					Stack:   nil,
@@ -83,7 +83,7 @@ func TestSliceObject_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: nil,
-				Err: &PathError{
+				Err: &NoSuchPathError{
 					Message: "index out of range",
 					Path:    "1",
 					Stack:   nil,
@@ -105,7 +105,7 @@ func TestSliceObject_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Object: nil,
-				Err: &PathError{
+				Err: &NoSuchPathError{
 					Message: "index out of range",
 					Path:    "1",
 					Stack:   []string{"0", "0"},
@@ -198,7 +198,7 @@ func TestSliceObject_Set(t *testing.T) {
 				Object: SliceObject([]Object{
 					DummyObject{1},
 				}),
-				Err: &PathError{
+				Err: &NoSuchPathError{
 					Message: "not a number",
 					Path:    "x",
 					Stack:   nil,
@@ -219,7 +219,7 @@ func TestSliceObject_Set(t *testing.T) {
 				Object: SliceObject([]Object{
 					DummyObject{1},
 				}),
-				Err: &PathError{
+				Err: &NoSuchPathError{
 					Message: "index out of range",
 					Path:    "1",
 					Stack:   nil,
@@ -248,7 +248,7 @@ func TestSliceObject_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Err: &PathError{
+				Err: &NoSuchPathError{
 					Message: "index out of range",
 					Path:    "1",
 					Stack:   []string{"0", "0"},
