@@ -1,4 +1,4 @@
-package undef
+package accessor
 
 func Convert(obj interface{}) (Object, error) {
 	switch t := obj.(type) {

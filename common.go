@@ -1,4 +1,4 @@
-package undef
+package accessor
 
 type pathPusher interface {
 	PushPath(path string)

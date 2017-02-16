@@ -1,4 +1,4 @@
-package undef
+package accessor
 
 type MapObject map[string]Object
 

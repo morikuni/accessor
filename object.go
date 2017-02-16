@@ -1,4 +1,4 @@
-package undef
+package accessor
 
 // Object represents undefined object (including unstructured types like nil, int, string or something).
 type Object interface {

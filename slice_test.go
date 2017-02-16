@@ -1,4 +1,4 @@
-package undef
+package accessor
 
 import (
 	"github.com/stretchr/testify/assert"
