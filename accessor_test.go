@@ -7,13 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewObject(t *testing.T) {
+func TestNewAccessor(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
 	type Expect struct {
-		Object Object
-		Err    error
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -30,8 +30,8 @@ func TestNewObject(t *testing.T) {
 				},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"int": ValueObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"int": ValueAccessor{1},
 				}),
 				Err: nil,
 			},
@@ -44,8 +44,8 @@ func TestNewObject(t *testing.T) {
 				},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"int": ValueObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"int": ValueAccessor{1},
 				}),
 				Err: nil,
 			},
@@ -60,10 +60,10 @@ func TestNewObject(t *testing.T) {
 				},
 			},
 			Expect: Expect{
-				Object: SliceObject([]Object{
-					ValueObject{1},
-					ValueObject{"string"},
-					ValueObject{true},
+				Accessor: SliceAccessor([]Accessor{
+					ValueAccessor{1},
+					ValueAccessor{"string"},
+					ValueAccessor{true},
 				}),
 				Err: nil,
 			},
@@ -74,8 +74,8 @@ func TestNewObject(t *testing.T) {
 				Value: time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC),
 			},
 			Expect: Expect{
-				Object: ValueObject{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
-				Err:    nil,
+				Accessor: ValueAccessor{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
+				Err:      nil,
 			},
 		},
 		Test{
@@ -97,19 +97,19 @@ func TestNewObject(t *testing.T) {
 				},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"name": ValueObject{"me"},
-					"age":  ValueObject{18},
-					"friends": SliceObject([]Object{
-						MapObject(map[string]Object{
-							"name": ValueObject{"hello"},
+				Accessor: MapAccessor(map[string]Accessor{
+					"name": ValueAccessor{"me"},
+					"age":  ValueAccessor{18},
+					"friends": SliceAccessor([]Accessor{
+						MapAccessor(map[string]Accessor{
+							"name": ValueAccessor{"hello"},
 						}),
-						MapObject(map[string]Object{
-							"name": ValueObject{"world"},
+						MapAccessor(map[string]Accessor{
+							"name": ValueAccessor{"world"},
 						}),
 					}),
-					"birthday": ValueObject{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
-					"nickname": ValueObject{nil},
+					"birthday": ValueAccessor{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
+					"nickname": ValueAccessor{nil},
 				}),
 				Err: nil,
 			},
@@ -120,9 +120,9 @@ func TestNewObject(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			obj, err := NewObject(testCase.Input.Value)
+			acc, err := NewAccessor(testCase.Input.Value)
 
-			assert.Equal(testCase.Expect.Object, obj)
+			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
 		})
 	}

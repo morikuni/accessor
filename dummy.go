@@ -4,18 +4,18 @@ import (
 	"fmt"
 )
 
-type DummyObject struct {
+type DummyAccessor struct {
 	ID int
 }
 
-func (o DummyObject) Get(path string, paths ...string) (Object, error) {
-	return nil, fmt.Errorf("this is dummy object: %d", o.ID)
+func (o DummyAccessor) Get(path string, paths ...string) (Accessor, error) {
+	return nil, fmt.Errorf("this is dummy accessor: %d", o.ID)
 }
 
-func (o DummyObject) Set(obj Object, path string, paths ...string) error {
-	return fmt.Errorf("this is dummy object: %d", o.ID)
+func (o DummyAccessor) Set(acc Accessor, path string, paths ...string) error {
+	return fmt.Errorf("this is dummy accessor: %d", o.ID)
 }
 
-func (o DummyObject) Unwrap() interface{} {
+func (o DummyAccessor) Unwrap() interface{} {
 	return o.ID
 }

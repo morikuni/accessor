@@ -4,7 +4,7 @@ type pathPusher interface {
 	PushPath(path string)
 }
 
-func getFromChild(child Object, path string, paths []string) (Object, error) {
+func getFromChild(child Accessor, path string, paths []string) (Accessor, error) {
 	if len(paths) == 0 {
 		return child, nil
 	}
@@ -20,8 +20,8 @@ func getFromChild(child Object, path string, paths []string) (Object, error) {
 }
 
 // paths must not be empty.
-func setToChild(child, obj Object, path string, paths []string) error {
-	err := child.Set(obj, paths[0], paths[1:]...)
+func setToChild(child, acc Accessor, path string, paths []string) error {
+	err := child.Set(acc, paths[0], paths[1:]...)
 	if err != nil {
 		if pe, ok := err.(pathPusher); ok {
 			pe.PushPath(path)

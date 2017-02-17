@@ -5,15 +5,15 @@ import (
 	"testing"
 )
 
-func TestSliceObject_Get(t *testing.T) {
+func TestSliceAccessor_Get(t *testing.T) {
 	type Input struct {
-		Object Object
-		Path   string
-		Paths  []string
+		Accessor Accessor
+		Path     string
+		Paths    []string
 	}
 	type Expect struct {
-		Object Object
-		Err    error
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -25,24 +25,24 @@ func TestSliceObject_Get(t *testing.T) {
 		Test{
 			Title: "success",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Path:  "0",
 				Paths: nil,
 			},
 			Expect: Expect{
-				Object: DummyObject{1},
-				Err:    nil,
+				Accessor: DummyAccessor{1},
+				Err:      nil,
 			},
 		},
 		Test{
 			Title: "success nested",
 			Input: Input{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						SliceObject([]Object{
-							DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
 						}),
 					}),
 				}),
@@ -50,21 +50,21 @@ func TestSliceObject_Get(t *testing.T) {
 				Paths: []string{"0", "0"},
 			},
 			Expect: Expect{
-				Object: DummyObject{1},
-				Err:    nil,
+				Accessor: DummyAccessor{1},
+				Err:      nil,
 			},
 		},
 		Test{
 			Title: "not a number",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Path:  "x",
 				Paths: nil,
 			},
 			Expect: Expect{
-				Object: nil,
+				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "not a number",
 					Path:    "x",
@@ -75,14 +75,14 @@ func TestSliceObject_Get(t *testing.T) {
 		Test{
 			Title: "index out of range",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Path:  "1",
 				Paths: nil,
 			},
 			Expect: Expect{
-				Object: nil,
+				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "index out of range",
 					Path:    "1",
@@ -93,10 +93,10 @@ func TestSliceObject_Get(t *testing.T) {
 		Test{
 			Title: "path error nested",
 			Input: Input{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						SliceObject([]Object{
-							DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
 						}),
 					}),
 				}),
@@ -104,7 +104,7 @@ func TestSliceObject_Get(t *testing.T) {
 				Paths: []string{"0", "1"},
 			},
 			Expect: Expect{
-				Object: nil,
+				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "index out of range",
 					Path:    "1",
@@ -118,24 +118,24 @@ func TestSliceObject_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			obj, err := testCase.Input.Object.Get(testCase.Input.Path, testCase.Input.Paths...)
+			acc, err := testCase.Input.Accessor.Get(testCase.Input.Path, testCase.Input.Paths...)
 
-			assert.Equal(testCase.Expect.Object, obj)
+			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
 		})
 	}
 }
 
-func TestSliceObject_Set(t *testing.T) {
+func TestSliceAccessor_Set(t *testing.T) {
 	type Input struct {
-		Object Object
-		Path   string
-		Paths  []string
-		BeSet  Object
+		Accessor Accessor
+		Path     string
+		Paths    []string
+		BeSet    Accessor
 	}
 	type Expect struct {
-		Object Object
-		Err    error
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -147,16 +147,16 @@ func TestSliceObject_Set(t *testing.T) {
 		Test{
 			Title: "success",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Path:  "0",
 				Paths: nil,
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: SliceObject([]Object{
-					DummyObject{2},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{2},
 				}),
 				Err: nil,
 			},
@@ -164,21 +164,21 @@ func TestSliceObject_Set(t *testing.T) {
 		Test{
 			Title: "success nested",
 			Input: Input{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						SliceObject([]Object{
-							DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
 						}),
 					}),
 				}),
 				Path:  "0",
 				Paths: []string{"0"},
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						DummyObject{2},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						DummyAccessor{2},
 					}),
 				}),
 				Err: nil,
@@ -187,16 +187,16 @@ func TestSliceObject_Set(t *testing.T) {
 		Test{
 			Title: "not a number",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Path:  "x",
 				Paths: nil,
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Err: &NoSuchPathError{
 					Message: "not a number",
@@ -208,16 +208,16 @@ func TestSliceObject_Set(t *testing.T) {
 		Test{
 			Title: "index out of range",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Path:  "1",
 				Paths: nil,
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 				Err: &NoSuchPathError{
 					Message: "index out of range",
@@ -229,22 +229,22 @@ func TestSliceObject_Set(t *testing.T) {
 		Test{
 			Title: "path error nested",
 			Input: Input{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						SliceObject([]Object{
-							DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
 						}),
 					}),
 				}),
 				Path:  "0",
 				Paths: []string{"0", "1"},
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						SliceObject([]Object{
-							DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
 						}),
 					}),
 				}),
@@ -261,21 +261,21 @@ func TestSliceObject_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			obj := testCase.Input.Object
-			err := obj.Set(testCase.Input.BeSet, testCase.Input.Path, testCase.Input.Paths...)
+			acc := testCase.Input.Accessor
+			err := acc.Set(testCase.Input.BeSet, testCase.Input.Path, testCase.Input.Paths...)
 
-			assert.Equal(testCase.Expect.Object, obj)
+			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
 		})
 	}
 }
 
-func TestSliceObject_Unwrap(t *testing.T) {
+func TestSliceAccessor_Unwrap(t *testing.T) {
 	type Input struct {
-		Object Object
+		Accessor Accessor
 	}
 	type Expect struct {
-		Object interface{}
+		Accessor interface{}
 	}
 	type Test struct {
 		Title  string
@@ -287,27 +287,27 @@ func TestSliceObject_Unwrap(t *testing.T) {
 		Test{
 			Title: "success",
 			Input: Input{
-				Object: SliceObject([]Object{
-					DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
 				}),
 			},
 			Expect: Expect{
-				Object: []interface{}{1},
+				Accessor: []interface{}{1},
 			},
 		},
 		Test{
 			Title: "success nested",
 			Input: Input{
-				Object: SliceObject([]Object{
-					SliceObject([]Object{
-						SliceObject([]Object{
-							DummyObject{1},
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
 						}),
 					}),
 				}),
 			},
 			Expect: Expect{
-				Object: []interface{}{
+				Accessor: []interface{}{
 					[]interface{}{
 						[]interface{}{
 							1,
@@ -322,7 +322,7 @@ func TestSliceObject_Unwrap(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			assert.Equal(testCase.Expect.Object, testCase.Input.Object.Unwrap())
+			assert.Equal(testCase.Expect.Accessor, testCase.Input.Accessor.Unwrap())
 		})
 	}
 }

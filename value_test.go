@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestValueObject_Get(t *testing.T) {
+func TestValueAccessor_Get(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -56,10 +56,10 @@ func TestValueObject_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			bt := ValueObject{testCase.Input.Value}
-			o, err := bt.Get("a")
+			bt := ValueAccessor{testCase.Input.Value}
+			a, err := bt.Get("a")
 
-			assert.Nil(o)
+			assert.Nil(a)
 			assert.Equal(&NoSuchPathError{
 				Message: testCase.Expect.ErrorMessage,
 				Path:    "a",
@@ -69,7 +69,7 @@ func TestValueObject_Get(t *testing.T) {
 	}
 }
 
-func TestValueObject_Set(t *testing.T) {
+func TestValueAccessor_Set(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -119,8 +119,8 @@ func TestValueObject_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			bt := ValueObject{testCase.Input.Value}
-			err := bt.Set(DummyObject{1}, "a")
+			bt := ValueAccessor{testCase.Input.Value}
+			err := bt.Set(DummyAccessor{1}, "a")
 
 			assert.Equal(bt.Value, testCase.Input.Value)
 			assert.Equal(&NoSuchPathError{
@@ -132,7 +132,7 @@ func TestValueObject_Set(t *testing.T) {
 	}
 }
 
-func TestValueObject_Unwrap(t *testing.T) {
+func TestValueAccessor_Unwrap(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -182,7 +182,7 @@ func TestValueObject_Unwrap(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			assert.Equal(testCase.Expect.Value, ValueObject{testCase.Input.Value}.Unwrap())
+			assert.Equal(testCase.Expect.Value, ValueAccessor{testCase.Input.Value}.Unwrap())
 		})
 	}
 }

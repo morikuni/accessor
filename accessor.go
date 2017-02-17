@@ -1,46 +1,56 @@
 package accessor
 
-import (
-	"strings"
-)
+// Accessor provides getter/setter to the object.
+type Accessor interface {
+	// Get finds a object at specific path.
+	// NoSuchPathError is returned when no object was found in the path.
+	Get(path string, paths ...string) (Accessor, error)
 
-func Get(obj Object, path string) (Object, error) {
-	if path == "/" {
-		return obj, nil
-	}
+	// Set set a object into specific path.
+	// NoSuchPathError is returned when the path is invalid.
+	Set(acc Accessor, path string, paths ...string) error
 
-	p, ps, err := ParsePath(path)
-	if err != nil {
-		return nil, err
-	}
-
-	return obj.Get(p, ps...)
+	// Unwrap unwraps the object and returns actual value.
+	Unwrap() interface{}
 }
 
-func Set(dst, obj Object, path string) error {
-	if path == "/" {
-		return nil
+func NewAccessor(acc interface{}) (Accessor, error) {
+	switch t := acc.(type) {
+	case map[string]interface{}:
+		ma := map[string]Accessor{}
+		for k, v := range t {
+			o, err := NewAccessor(v)
+			if err != nil {
+				return nil, err
+			}
+			ma[k] = o
+		}
+		return MapAccessor(ma), nil
+	case map[interface{}]interface{}:
+		ma := map[string]Accessor{}
+		for k, v := range t {
+			key, ok := k.(string)
+			if !ok {
+				return nil, NewInvalidKeyError(k)
+			}
+			o, err := NewAccessor(v)
+			if err != nil {
+				return nil, err
+			}
+			ma[key] = o
+		}
+		return MapAccessor(ma), nil
+	case []interface{}:
+		sa := make([]Accessor, len(t))
+		for i, v := range t {
+			o, err := NewAccessor(v)
+			if err != nil {
+				return nil, err
+			}
+			sa[i] = o
+		}
+		return SliceAccessor(sa), nil
+	default:
+		return ValueAccessor{t}, nil
 	}
-
-	p, ps, err := ParsePath(path)
-	if err != nil {
-		return err
-	}
-
-	return dst.Set(obj, p, ps...)
-}
-
-func ParsePath(path string) (string, []string, error) {
-	paths := strings.Split(path, "/")
-	if paths[0] == "" {
-		paths = paths[1:]
-	}
-	if last := len(paths) - 1; paths[last] == "" {
-		paths = paths[:last]
-	}
-	if len(paths) == 0 {
-		return "", nil, NewInvalidPathError(path)
-	}
-
-	return paths[0], paths[1:], nil
 }

@@ -4,42 +4,42 @@ import (
 	"strconv"
 )
 
-type SliceObject []Object
+type SliceAccessor []Accessor
 
-func (o SliceObject) Get(path string, paths ...string) (Object, error) {
+func (a SliceAccessor) Get(path string, paths ...string) (Accessor, error) {
 	i, err := strconv.Atoi(path)
 	if err != nil {
 		return nil, NewNoSuchPathError("not a number", path)
 	}
 
-	if i < 0 || i >= len(o) {
+	if i < 0 || i >= len(a) {
 		return nil, NewNoSuchPathError("index out of range", path)
 	}
 
-	return getFromChild(o[i], path, paths)
+	return getFromChild(a[i], path, paths)
 }
 
-func (o SliceObject) Set(obj Object, path string, paths ...string) error {
+func (a SliceAccessor) Set(acc Accessor, path string, paths ...string) error {
 	i, err := strconv.Atoi(path)
 	if err != nil {
 		return NewNoSuchPathError("not a number", path)
 	}
 
-	if i < 0 || i >= len(o) {
+	if i < 0 || i >= len(a) {
 		return NewNoSuchPathError("index out of range", path)
 	}
 
 	if len(paths) == 0 {
-		o[i] = obj
+		a[i] = acc
 		return nil
 	}
 
-	return setToChild(o[i], obj, path, paths)
+	return setToChild(a[i], acc, path, paths)
 }
 
-func (o SliceObject) Unwrap() interface{} {
-	result := make([]interface{}, len(o))
-	for i, v := range o {
+func (a SliceAccessor) Unwrap() interface{} {
+	result := make([]interface{}, len(a))
+	for i, v := range a {
 		result[i] = v.Unwrap()
 	}
 	return result

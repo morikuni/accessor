@@ -5,15 +5,15 @@ import (
 	"testing"
 )
 
-func TestMapObject_Get(t *testing.T) {
+func TestMapAccessor_Get(t *testing.T) {
 	type Input struct {
-		Object Object
-		Path   string
-		Paths  []string
+		Accessor Accessor
+		Path     string
+		Paths    []string
 	}
 	type Expect struct {
-		Object Object
-		Err    error
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -25,24 +25,24 @@ func TestMapObject_Get(t *testing.T) {
 		Test{
 			Title: "success",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
 				}),
 				Path:  "a",
 				Paths: nil,
 			},
 			Expect: Expect{
-				Object: DummyObject{1},
-				Err:    nil,
+				Accessor: DummyAccessor{1},
+				Err:      nil,
 			},
 		},
 		Test{
 			Title: "success nested",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": MapObject(map[string]Object{
-							"c": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
 						}),
 					}),
 				}),
@@ -50,21 +50,21 @@ func TestMapObject_Get(t *testing.T) {
 				Paths: []string{"b", "c"},
 			},
 			Expect: Expect{
-				Object: DummyObject{1},
-				Err:    nil,
+				Accessor: DummyAccessor{1},
+				Err:      nil,
 			},
 		},
 		Test{
 			Title: "path error",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
 				}),
 				Path:  "x",
 				Paths: nil,
 			},
 			Expect: Expect{
-				Object: nil,
+				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "no such key",
 					Path:    "x",
@@ -75,10 +75,10 @@ func TestMapObject_Get(t *testing.T) {
 		Test{
 			Title: "path error nested",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": MapObject(map[string]Object{
-							"c": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
 						}),
 					}),
 				}),
@@ -86,7 +86,7 @@ func TestMapObject_Get(t *testing.T) {
 				Paths: []string{"b", "x"},
 			},
 			Expect: Expect{
-				Object: nil,
+				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "no such key",
 					Path:    "x",
@@ -100,24 +100,24 @@ func TestMapObject_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			obj, err := testCase.Input.Object.Get(testCase.Input.Path, testCase.Input.Paths...)
+			acc, err := testCase.Input.Accessor.Get(testCase.Input.Path, testCase.Input.Paths...)
 
-			assert.Equal(testCase.Expect.Object, obj)
+			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
 		})
 	}
 }
 
-func TestMapObject_Set(t *testing.T) {
+func TestMapAccessor_Set(t *testing.T) {
 	type Input struct {
-		Object Object
-		Path   string
-		Paths  []string
-		BeSet  Object
+		Accessor Accessor
+		Path     string
+		Paths    []string
+		BeSet    Accessor
 	}
 	type Expect struct {
-		Object Object
-		Err    error
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -129,16 +129,16 @@ func TestMapObject_Set(t *testing.T) {
 		Test{
 			Title: "success",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
 				}),
 				Path:  "a",
 				Paths: nil,
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{2},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{2},
 				}),
 				Err: nil,
 			},
@@ -146,21 +146,21 @@ func TestMapObject_Set(t *testing.T) {
 		Test{
 			Title: "success nested",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": MapObject(map[string]Object{
-							"c": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
 						}),
 					}),
 				}),
 				Path:  "a",
 				Paths: []string{"b"},
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": DummyObject{2},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": DummyAccessor{2},
 					}),
 				}),
 				Err: nil,
@@ -169,16 +169,16 @@ func TestMapObject_Set(t *testing.T) {
 		Test{
 			Title: "path error",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
 				}),
 				Path:  "x",
 				Paths: nil,
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
 				}),
 				Err: &NoSuchPathError{
 					Message: "no such key",
@@ -190,22 +190,22 @@ func TestMapObject_Set(t *testing.T) {
 		Test{
 			Title: "path error nested",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": MapObject(map[string]Object{
-							"c": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
 						}),
 					}),
 				}),
 				Path:  "a",
 				Paths: []string{"b", "x"},
-				BeSet: DummyObject{2},
+				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": MapObject(map[string]Object{
-							"c": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
 						}),
 					}),
 				}),
@@ -222,21 +222,21 @@ func TestMapObject_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			obj := testCase.Input.Object
-			err := obj.Set(testCase.Input.BeSet, testCase.Input.Path, testCase.Input.Paths...)
+			acc := testCase.Input.Accessor
+			err := acc.Set(testCase.Input.BeSet, testCase.Input.Path, testCase.Input.Paths...)
 
-			assert.Equal(testCase.Expect.Object, obj)
+			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
 		})
 	}
 }
 
-func TestMapObject_Unwrap(t *testing.T) {
+func TestMapAccessor_Unwrap(t *testing.T) {
 	type Input struct {
-		Object Object
+		Accessor Accessor
 	}
 	type Expect struct {
-		Object interface{}
+		Accessor interface{}
 	}
 	type Test struct {
 		Title  string
@@ -248,12 +248,12 @@ func TestMapObject_Unwrap(t *testing.T) {
 		Test{
 			Title: "success",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
 				}),
 			},
 			Expect: Expect{
-				Object: map[string]interface{}{
+				Accessor: map[string]interface{}{
 					"a": 1,
 				},
 			},
@@ -261,16 +261,16 @@ func TestMapObject_Unwrap(t *testing.T) {
 		Test{
 			Title: "success nested",
 			Input: Input{
-				Object: MapObject(map[string]Object{
-					"a": MapObject(map[string]Object{
-						"b": MapObject(map[string]Object{
-							"c": DummyObject{1},
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
 						}),
 					}),
 				}),
 			},
 			Expect: Expect{
-				Object: map[string]interface{}{
+				Accessor: map[string]interface{}{
 					"a": map[string]interface{}{
 						"b": map[string]interface{}{
 							"c": 1,
@@ -285,7 +285,7 @@ func TestMapObject_Unwrap(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			assert.Equal(testCase.Expect.Object, testCase.Input.Object.Unwrap())
+			assert.Equal(testCase.Expect.Accessor, testCase.Input.Accessor.Unwrap())
 		})
 	}
 }
