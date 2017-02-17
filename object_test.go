@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConvert(t *testing.T) {
+func TestNewObject(t *testing.T) {
 	type Input struct {
 		Value interface{}
 	}
@@ -120,7 +120,7 @@ func TestConvert(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			obj, err := Convert(testCase.Input.Value)
+			obj, err := NewObject(testCase.Input.Value)
 
 			assert.Equal(testCase.Expect.Object, obj)
 			assert.Equal(testCase.Expect.Err, err)
