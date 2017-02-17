@@ -9,7 +9,6 @@ func TestSliceAccessor_Get(t *testing.T) {
 	type Input struct {
 		Accessor Accessor
 		Path     string
-		Paths    []string
 	}
 	type Expect struct {
 		Accessor Accessor
@@ -28,8 +27,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Accessor: SliceAccessor([]Accessor{
 					DummyAccessor{1},
 				}),
-				Path:  "0",
-				Paths: nil,
+				Path: "0",
 			},
 			Expect: Expect{
 				Accessor: DummyAccessor{1},
@@ -46,8 +44,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "0",
-				Paths: []string{"0", "0"},
+				Path: "0/0/0",
 			},
 			Expect: Expect{
 				Accessor: DummyAccessor{1},
@@ -60,14 +57,13 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Accessor: SliceAccessor([]Accessor{
 					DummyAccessor{1},
 				}),
-				Path:  "x",
-				Paths: nil,
+				Path: "x",
 			},
 			Expect: Expect{
 				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "not a number",
-					Path:    "x",
+					Key:     "x",
 					Stack:   nil,
 				},
 			},
@@ -78,14 +74,13 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Accessor: SliceAccessor([]Accessor{
 					DummyAccessor{1},
 				}),
-				Path:  "1",
-				Paths: nil,
+				Path: "1",
 			},
 			Expect: Expect{
 				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "index out of range",
-					Path:    "1",
+					Key:     "1",
 					Stack:   nil,
 				},
 			},
@@ -100,14 +95,13 @@ func TestSliceAccessor_Get(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "0",
-				Paths: []string{"0", "1"},
+				Path: "0/0/1",
 			},
 			Expect: Expect{
 				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "index out of range",
-					Path:    "1",
+					Key:     "1",
 					Stack:   []string{"0", "0"},
 				},
 			},
@@ -118,7 +112,9 @@ func TestSliceAccessor_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			acc, err := testCase.Input.Accessor.Get(testCase.Input.Path, testCase.Input.Paths...)
+			path, err := ParsePath(testCase.Input.Path)
+			assert.Nil(err)
+			acc, err := testCase.Input.Accessor.Get(path)
 
 			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
@@ -130,7 +126,6 @@ func TestSliceAccessor_Set(t *testing.T) {
 	type Input struct {
 		Accessor Accessor
 		Path     string
-		Paths    []string
 		BeSet    Accessor
 	}
 	type Expect struct {
@@ -151,7 +146,6 @@ func TestSliceAccessor_Set(t *testing.T) {
 					DummyAccessor{1},
 				}),
 				Path:  "0",
-				Paths: nil,
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -171,8 +165,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "0",
-				Paths: []string{"0"},
+				Path:  "0/0",
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -191,7 +184,6 @@ func TestSliceAccessor_Set(t *testing.T) {
 					DummyAccessor{1},
 				}),
 				Path:  "x",
-				Paths: nil,
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -200,7 +192,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				}),
 				Err: &NoSuchPathError{
 					Message: "not a number",
-					Path:    "x",
+					Key:     "x",
 					Stack:   nil,
 				},
 			},
@@ -212,7 +204,6 @@ func TestSliceAccessor_Set(t *testing.T) {
 					DummyAccessor{1},
 				}),
 				Path:  "1",
-				Paths: nil,
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -221,7 +212,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				}),
 				Err: &NoSuchPathError{
 					Message: "index out of range",
-					Path:    "1",
+					Key:     "1",
 					Stack:   nil,
 				},
 			},
@@ -236,8 +227,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "0",
-				Paths: []string{"0", "1"},
+				Path:  "0/0/1",
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -250,7 +240,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				}),
 				Err: &NoSuchPathError{
 					Message: "index out of range",
-					Path:    "1",
+					Key:     "1",
 					Stack:   []string{"0", "0"},
 				},
 			},
@@ -261,8 +251,10 @@ func TestSliceAccessor_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
+			path, err := ParsePath(testCase.Input.Path)
+			assert.Nil(err)
 			acc := testCase.Input.Accessor
-			err := acc.Set(testCase.Input.BeSet, testCase.Input.Path, testCase.Input.Paths...)
+			err = acc.Set(testCase.Input.BeSet, path)
 
 			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)

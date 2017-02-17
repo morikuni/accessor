@@ -2,31 +2,32 @@ package accessor
 
 type MapAccessor map[string]Accessor
 
-func (a MapAccessor) Get(path string, paths ...string) (Accessor, error) {
-	child, ok := a[path]
+func (a MapAccessor) Get(path Path) (Accessor, error) {
+	child, ok := a[path.Key()]
 	if !ok {
 		return nil, NewNoSuchPathError("no such key", path)
 	}
 
-	return getFromChild(child, path, paths)
+	return getFromChild(child, path)
 }
 
-func (a MapAccessor) Set(value interface{}, path string, paths ...string) error {
-	child, ok := a[path]
+func (a MapAccessor) Set(value interface{}, path Path) error {
+	child, ok := a[path.Key()]
 	if !ok {
 		return NewNoSuchPathError("no such key", path)
 	}
 
-	if len(paths) == 0 {
+	sub, ok := path.SubPath()
+	if !ok {
 		acc, err := NewAccessor(value)
 		if err != nil {
 			return err
 		}
-		a[path] = acc
+		a[path.Key()] = acc
 		return nil
 	}
 
-	return setToChild(child, value, path, paths)
+	return setToChild(child, value, path.Key(), sub)
 }
 
 func (a MapAccessor) Unwrap() interface{} {

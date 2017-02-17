@@ -8,11 +8,11 @@ type DummyAccessor struct {
 	ID int
 }
 
-func (o DummyAccessor) Get(path string, paths ...string) (Accessor, error) {
+func (o DummyAccessor) Get(path Path) (Accessor, error) {
 	return nil, fmt.Errorf("this is dummy accessor: %d", o.ID)
 }
 
-func (o DummyAccessor) Set(_ interface{}, path string, paths ...string) error {
+func (o DummyAccessor) Set(_ interface{}, path Path) error {
 	return fmt.Errorf("this is dummy accessor: %d", o.ID)
 }
 

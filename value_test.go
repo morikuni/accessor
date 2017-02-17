@@ -56,13 +56,15 @@ func TestValueAccessor_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
+			path, err := ParsePath("a")
+			assert.Nil(err)
 			bt := ValueAccessor{testCase.Input.Value}
-			a, err := bt.Get("a")
+			a, err := bt.Get(path)
 
 			assert.Nil(a)
 			assert.Equal(&NoSuchPathError{
 				Message: testCase.Expect.ErrorMessage,
-				Path:    "a",
+				Key:     "a",
 				Stack:   nil,
 			}, err)
 		})
@@ -119,13 +121,15 @@ func TestValueAccessor_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
+			path, err := ParsePath("a")
+			assert.Nil(err)
 			bt := ValueAccessor{testCase.Input.Value}
-			err := bt.Set(DummyAccessor{1}, "a")
+			err = bt.Set(DummyAccessor{1}, path)
 
 			assert.Equal(bt.Value, testCase.Input.Value)
 			assert.Equal(&NoSuchPathError{
 				Message: testCase.Expect.ErrorMessage,
-				Path:    "a",
+				Key:     "a",
 				Stack:   nil,
 			}, err)
 		})

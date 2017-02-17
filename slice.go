@@ -6,8 +6,8 @@ import (
 
 type SliceAccessor []Accessor
 
-func (a SliceAccessor) Get(path string, paths ...string) (Accessor, error) {
-	i, err := strconv.Atoi(path)
+func (a SliceAccessor) Get(path Path) (Accessor, error) {
+	i, err := strconv.Atoi(path.Key())
 	if err != nil {
 		return nil, NewNoSuchPathError("not a number", path)
 	}
@@ -16,11 +16,11 @@ func (a SliceAccessor) Get(path string, paths ...string) (Accessor, error) {
 		return nil, NewNoSuchPathError("index out of range", path)
 	}
 
-	return getFromChild(a[i], path, paths)
+	return getFromChild(a[i], path)
 }
 
-func (a SliceAccessor) Set(value interface{}, path string, paths ...string) error {
-	i, err := strconv.Atoi(path)
+func (a SliceAccessor) Set(value interface{}, path Path) error {
+	i, err := strconv.Atoi(path.Key())
 	if err != nil {
 		return NewNoSuchPathError("not a number", path)
 	}
@@ -29,7 +29,8 @@ func (a SliceAccessor) Set(value interface{}, path string, paths ...string) erro
 		return NewNoSuchPathError("index out of range", path)
 	}
 
-	if len(paths) == 0 {
+	sub, ok := path.SubPath()
+	if !ok {
 		acc, err := NewAccessor(value)
 		if err != nil {
 			return err
@@ -38,7 +39,7 @@ func (a SliceAccessor) Set(value interface{}, path string, paths ...string) erro
 		return nil
 	}
 
-	return setToChild(a[i], value, path, paths)
+	return setToChild(a[i], value, path.Key(), sub)
 }
 
 func (a SliceAccessor) Unwrap() interface{} {

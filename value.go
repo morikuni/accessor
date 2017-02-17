@@ -10,11 +10,11 @@ type ValueAccessor struct {
 	Value interface{}
 }
 
-func (a ValueAccessor) Get(path string, paths ...string) (Accessor, error) {
+func (a ValueAccessor) Get(path Path) (Accessor, error) {
 	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path)
 }
 
-func (a ValueAccessor) Set(_ interface{}, path string, paths ...string) error {
+func (a ValueAccessor) Set(_ interface{}, path Path) error {
 	return NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path)
 }
 

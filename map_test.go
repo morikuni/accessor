@@ -9,7 +9,6 @@ func TestMapAccessor_Get(t *testing.T) {
 	type Input struct {
 		Accessor Accessor
 		Path     string
-		Paths    []string
 	}
 	type Expect struct {
 		Accessor Accessor
@@ -28,8 +27,7 @@ func TestMapAccessor_Get(t *testing.T) {
 				Accessor: MapAccessor(map[string]Accessor{
 					"a": DummyAccessor{1},
 				}),
-				Path:  "a",
-				Paths: nil,
+				Path: "a",
 			},
 			Expect: Expect{
 				Accessor: DummyAccessor{1},
@@ -46,8 +44,7 @@ func TestMapAccessor_Get(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "a",
-				Paths: []string{"b", "c"},
+				Path: "a/b/c",
 			},
 			Expect: Expect{
 				Accessor: DummyAccessor{1},
@@ -60,14 +57,13 @@ func TestMapAccessor_Get(t *testing.T) {
 				Accessor: MapAccessor(map[string]Accessor{
 					"a": DummyAccessor{1},
 				}),
-				Path:  "x",
-				Paths: nil,
+				Path: "x",
 			},
 			Expect: Expect{
 				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "no such key",
-					Path:    "x",
+					Key:     "x",
 					Stack:   nil,
 				},
 			},
@@ -82,14 +78,13 @@ func TestMapAccessor_Get(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "a",
-				Paths: []string{"b", "x"},
+				Path: "a/b/x",
 			},
 			Expect: Expect{
 				Accessor: nil,
 				Err: &NoSuchPathError{
 					Message: "no such key",
-					Path:    "x",
+					Key:     "x",
 					Stack:   []string{"b", "a"},
 				},
 			},
@@ -100,7 +95,9 @@ func TestMapAccessor_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			acc, err := testCase.Input.Accessor.Get(testCase.Input.Path, testCase.Input.Paths...)
+			path, err := ParsePath(testCase.Input.Path)
+			assert.Nil(err)
+			acc, err := testCase.Input.Accessor.Get(path)
 
 			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
@@ -112,7 +109,6 @@ func TestMapAccessor_Set(t *testing.T) {
 	type Input struct {
 		Accessor Accessor
 		Path     string
-		Paths    []string
 		BeSet    Accessor
 	}
 	type Expect struct {
@@ -133,7 +129,6 @@ func TestMapAccessor_Set(t *testing.T) {
 					"a": DummyAccessor{1},
 				}),
 				Path:  "a",
-				Paths: nil,
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -153,8 +148,7 @@ func TestMapAccessor_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "a",
-				Paths: []string{"b"},
+				Path:  "a/b",
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -173,7 +167,6 @@ func TestMapAccessor_Set(t *testing.T) {
 					"a": DummyAccessor{1},
 				}),
 				Path:  "x",
-				Paths: nil,
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -182,7 +175,7 @@ func TestMapAccessor_Set(t *testing.T) {
 				}),
 				Err: &NoSuchPathError{
 					Message: "no such key",
-					Path:    "x",
+					Key:     "x",
 					Stack:   nil,
 				},
 			},
@@ -197,8 +190,7 @@ func TestMapAccessor_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Path:  "a",
-				Paths: []string{"b", "x"},
+				Path:  "a/b/x",
 				BeSet: DummyAccessor{2},
 			},
 			Expect: Expect{
@@ -211,7 +203,7 @@ func TestMapAccessor_Set(t *testing.T) {
 				}),
 				Err: &NoSuchPathError{
 					Message: "no such key",
-					Path:    "x",
+					Key:     "x",
 					Stack:   []string{"b", "a"},
 				},
 			},
@@ -222,8 +214,10 @@ func TestMapAccessor_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
+			path, err := ParsePath(testCase.Input.Path)
+			assert.Nil(err)
 			acc := testCase.Input.Accessor
-			err := acc.Set(testCase.Input.BeSet, testCase.Input.Path, testCase.Input.Paths...)
+			err = acc.Set(testCase.Input.BeSet, path)
 
 			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)
