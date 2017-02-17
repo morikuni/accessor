@@ -21,7 +21,7 @@ func getFromChild(child Accessor, path Path) (Accessor, error) {
 }
 
 func setToChild(child Accessor, value interface{}, key string, path Path) error {
-	err := child.Set(value, path)
+	err := child.Set(path, value)
 	if err != nil {
 		if pe, ok := err.(pathPusher); ok {
 			pe.PushPath(key)

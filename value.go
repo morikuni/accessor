@@ -14,7 +14,7 @@ func (a ValueAccessor) Get(path Path) (Accessor, error) {
 	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path)
 }
 
-func (a ValueAccessor) Set(_ interface{}, path Path) error {
+func (a ValueAccessor) Set(path Path, _ interface{}) error {
 	return NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path)
 }
 

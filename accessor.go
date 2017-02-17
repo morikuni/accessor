@@ -8,7 +8,7 @@ type Accessor interface {
 
 	// Set set a object into specific path.
 	// NoSuchPathError is returned when the path is invalid.
-	Set(value interface{}, path Path) error
+	Set(path Path, value interface{}) error
 
 	// Unwrap unwraps the object and returns actual value.
 	Unwrap() interface{}

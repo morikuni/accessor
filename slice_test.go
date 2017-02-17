@@ -254,7 +254,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 			path, err := ParsePath(testCase.Input.Path)
 			assert.Nil(err)
 			acc := testCase.Input.Accessor
-			err = acc.Set(testCase.Input.BeSet, path)
+			err = acc.Set(path, testCase.Input.BeSet)
 
 			assert.Equal(testCase.Expect.Accessor, acc)
 			assert.Equal(testCase.Expect.Err, err)

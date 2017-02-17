@@ -11,7 +11,7 @@ func (a MapAccessor) Get(path Path) (Accessor, error) {
 	return getFromChild(child, path)
 }
 
-func (a MapAccessor) Set(value interface{}, path Path) error {
+func (a MapAccessor) Set(path Path, value interface{}) error {
 	child, ok := a[path.Key()]
 	if !ok {
 		return NewNoSuchPathError("no such key", path)

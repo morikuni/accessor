@@ -124,7 +124,7 @@ func TestValueAccessor_Set(t *testing.T) {
 			path, err := ParsePath("a")
 			assert.Nil(err)
 			bt := ValueAccessor{testCase.Input.Value}
-			err = bt.Set(DummyAccessor{1}, path)
+			err = bt.Set(path, DummyAccessor{1})
 
 			assert.Equal(bt.Value, testCase.Input.Value)
 			assert.Equal(&NoSuchPathError{

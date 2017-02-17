@@ -36,7 +36,7 @@ func Update(i interface{}, path string, value interface{}) (interface{}, error) 
 		return nil, err
 	}
 
-	err = acc.Set(value, p)
+	err = acc.Set(p, value)
 	if err != nil {
 		return nil, err
 	}
