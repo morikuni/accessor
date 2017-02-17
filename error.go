@@ -5,18 +5,18 @@ import (
 	"strings"
 )
 
-func NewNoSuchPathError(message, path string) error {
-	return &NoSuchPathError{message, path, nil}
+func NewNoSuchPathError(message string, path Path) error {
+	return &NoSuchPathError{message, path.Key(), nil}
 }
 
 type NoSuchPathError struct {
 	Message string
-	Path    string
+	Key     string
 	Stack   []string
 }
 
 func (e *NoSuchPathError) Error() string {
-	return fmt.Sprintf("%s: about %q: at %s", e.Message, e.Path, strings.Join(e.Stack, "/")+"/")
+	return fmt.Sprintf("%s: about %q: at %s", e.Message, e.Key, strings.Join(e.Stack, "/")+"/")
 }
 
 func (e *NoSuchPathError) PushPath(path string) {
