@@ -31,13 +31,23 @@ func TestParsePath(t *testing.T) {
 			},
 		},
 		Test{
-			Title: "slash",
+			Title: "many slash",
 			Input: Input{
 				Path: "/a/b/0/",
 			},
 			Expect: Expect{
 				Path: &basicPath{"a", &basicPath{"b", &basicPath{"0", nil}}},
 				Err:  nil,
+			},
+		},
+		Test{
+			Title: "only slash",
+			Input: Input{
+				Path: "/",
+			},
+			Expect: Expect{
+				Path: nil,
+				Err:  NewInvalidPathError("/"),
 			},
 		},
 		Test{
