@@ -1,5 +1,9 @@
 package accessor
 
+import (
+	"reflect"
+)
+
 // Accessor provides getter/setter to the object.
 type Accessor interface {
 	// Get finds a object at specific path.
@@ -19,35 +23,26 @@ func NewAccessor(acc interface{}) (Accessor, error) {
 		return a, nil
 	}
 
-	switch t := acc.(type) {
-	case map[string]interface{}:
+	rv := reflect.ValueOf(acc)
+	switch rv.Kind() {
+	case reflect.Map:
 		ma := map[string]Accessor{}
-		for k, v := range t {
-			o, err := NewAccessor(v)
-			if err != nil {
-				return nil, err
-			}
-			ma[k] = o
-		}
-		return MapAccessor(ma), nil
-	case map[interface{}]interface{}:
-		ma := map[string]Accessor{}
-		for k, v := range t {
-			key, ok := k.(string)
+		for _, k := range rv.MapKeys() {
+			key, ok := k.Interface().(string)
 			if !ok {
-				return nil, NewInvalidKeyError(k)
+				return nil, NewInvalidKeyError(k.Interface())
 			}
-			o, err := NewAccessor(v)
+			o, err := NewAccessor(rv.MapIndex(k).Interface())
 			if err != nil {
 				return nil, err
 			}
 			ma[key] = o
 		}
 		return MapAccessor(ma), nil
-	case []interface{}:
-		sa := make([]Accessor, len(t))
-		for i, v := range t {
-			o, err := NewAccessor(v)
+	case reflect.Slice:
+		sa := make([]Accessor, rv.Len())
+		for i := 0; i < rv.Len(); i++ {
+			o, err := NewAccessor(rv.Index(i).Interface())
 			if err != nil {
 				return nil, err
 			}
@@ -55,6 +50,6 @@ func NewAccessor(acc interface{}) (Accessor, error) {
 		}
 		return SliceAccessor(sa), nil
 	default:
-		return ValueAccessor{t}, nil
+		return ValueAccessor{acc}, nil
 	}
 }
