@@ -2,6 +2,7 @@ package accessor
 
 import (
 	"bytes"
+	"strings"
 )
 
 type Path interface {
@@ -10,57 +11,75 @@ type Path interface {
 	PushHead(key string) Path
 }
 
-type path struct {
+type basicPath struct {
 	key  string
-	tail *path
+	tail Path
 }
 
-func (p *path) PushHead(key string) Path {
-	return &path{
+func (p *basicPath) PushHead(key string) Path {
+	return &basicPath{
 		key,
 		p,
 	}
 }
 
-func (p *path) Key() string {
+func (p *basicPath) Key() string {
 	return p.key
 }
 
-func (p *path) SubPath() (Path, bool) {
+func (p *basicPath) SubPath() (Path, bool) {
 	if p.tail == nil {
 		return nil, false
 	}
 	return p.tail, true
 }
 
-func (p *path) String() string {
+func (p *basicPath) String() string {
 	buf := bytes.NewBufferString(p.key)
-	tail := p.tail
-	for tail != nil {
+	tail, ok := p.SubPath()
+	for ok {
 		buf.WriteRune('/')
-		buf.WriteString(tail.key)
-		tail = tail.tail
+		buf.WriteString(tail.Key())
+		tail, ok = tail.SubPath()
 	}
 	return buf.String()
 }
 
-type emptyPath struct{}
+type rootPath struct{}
 
-func (p emptyPath) PushHead(key string) Path {
-	return &path{
+func (p rootPath) PushHead(key string) Path {
+	return &basicPath{
 		key,
 		nil,
 	}
 }
 
-func (p emptyPath) Key() string {
+func (p rootPath) Key() string {
 	return ""
 }
 
-func (p emptyPath) SubPath() (Path, bool) {
+func (p rootPath) SubPath() (Path, bool) {
 	return nil, false
 }
 
-func (p emptyPath) String() string {
-	return "?"
+func (p rootPath) String() string {
+	return "/"
+}
+
+func ParsePath(path string) (Path, error) {
+	paths := strings.Split(strings.Trim(path, "/ "), "/")
+
+	if len(paths) == 0 {
+		return nil, NewInvalidPathError(path)
+	}
+
+	last := len(paths) - 1
+	var p Path = rootPath{}
+	for i := last; i >= 0; i-- {
+		if paths[i] == "" {
+			return nil, NewInvalidPathError(path)
+		}
+		p = p.PushHead(paths[i])
+	}
+	return p, nil
 }
