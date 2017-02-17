@@ -12,7 +12,7 @@ func (o DummyAccessor) Get(path string, paths ...string) (Accessor, error) {
 	return nil, fmt.Errorf("this is dummy accessor: %d", o.ID)
 }
 
-func (o DummyAccessor) Set(acc Accessor, path string, paths ...string) error {
+func (o DummyAccessor) Set(_ interface{}, path string, paths ...string) error {
 	return fmt.Errorf("this is dummy accessor: %d", o.ID)
 }
 

@@ -8,13 +8,17 @@ type Accessor interface {
 
 	// Set set a object into specific path.
 	// NoSuchPathError is returned when the path is invalid.
-	Set(acc Accessor, path string, paths ...string) error
+	Set(value interface{}, path string, paths ...string) error
 
 	// Unwrap unwraps the object and returns actual value.
 	Unwrap() interface{}
 }
 
 func NewAccessor(acc interface{}) (Accessor, error) {
+	if a, ok := acc.(Accessor); ok {
+		return a, nil
+	}
+
 	switch t := acc.(type) {
 	case map[string]interface{}:
 		ma := map[string]Accessor{}

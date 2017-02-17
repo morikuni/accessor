@@ -19,7 +19,7 @@ func (a SliceAccessor) Get(path string, paths ...string) (Accessor, error) {
 	return getFromChild(a[i], path, paths)
 }
 
-func (a SliceAccessor) Set(acc Accessor, path string, paths ...string) error {
+func (a SliceAccessor) Set(value interface{}, path string, paths ...string) error {
 	i, err := strconv.Atoi(path)
 	if err != nil {
 		return NewNoSuchPathError("not a number", path)
@@ -30,11 +30,15 @@ func (a SliceAccessor) Set(acc Accessor, path string, paths ...string) error {
 	}
 
 	if len(paths) == 0 {
+		acc, err := NewAccessor(value)
+		if err != nil {
+			return err
+		}
 		a[i] = acc
 		return nil
 	}
 
-	return setToChild(a[i], acc, path, paths)
+	return setToChild(a[i], value, path, paths)
 }
 
 func (a SliceAccessor) Unwrap() interface{} {
