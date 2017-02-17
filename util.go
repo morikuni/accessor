@@ -1,46 +1,44 @@
 package accessor
 
-import (
-	"strings"
-)
-
-func Get(acc Accessor, path string) (Accessor, error) {
+func Get(i interface{}, path string) (interface{}, error) {
 	if path == "/" {
-		return acc, nil
+		return i, nil
 	}
-
-	p, ps, err := ParsePath(path)
+	p, err := ParsePath(path)
 	if err != nil {
 		return nil, err
 	}
 
-	return acc.Get(p, ps...)
-}
-
-func Set(dst, acc Accessor, path string) error {
-	if path == "/" {
-		return nil
-	}
-
-	p, ps, err := ParsePath(path)
+	acc, err := NewAccessor(i)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return dst.Set(acc, p, ps...)
+	acc, err = acc.Get(p)
+	if err != nil {
+		return nil, err
+	}
+
+	return acc.Unwrap(), nil
 }
 
-func ParsePath(path string) (string, []string, error) {
-	paths := strings.Split(path, "/")
-	if paths[0] == "" {
-		paths = paths[1:]
+func Update(i interface{}, path string, value interface{}) (interface{}, error) {
+	if path == "/" {
+		return nil, NewInvalidPathError(path)
 	}
-	if last := len(paths) - 1; paths[last] == "" {
-		paths = paths[:last]
-	}
-	if len(paths) == 0 {
-		return "", nil, NewInvalidPathError(path)
+	p, err := ParsePath(path)
+	if err != nil {
+		return nil, err
 	}
 
-	return paths[0], paths[1:], nil
+	acc, err := NewAccessor(i)
+	if err != nil {
+		return nil, err
+	}
+
+	err = acc.Set(value, p)
+	if err != nil {
+		return nil, err
+	}
+	return acc.Unwrap(), nil
 }
