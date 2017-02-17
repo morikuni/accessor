@@ -45,25 +45,25 @@ func (p *basicPath) String() string {
 	return buf.String()
 }
 
-type rootPath struct{}
+type initialPath struct{}
 
-func (p rootPath) PushHead(key string) Path {
+func (p initialPath) PushHead(key string) Path {
 	return &basicPath{
 		key,
 		nil,
 	}
 }
 
-func (p rootPath) Key() string {
+func (p initialPath) Key() string {
 	return ""
 }
 
-func (p rootPath) SubPath() (Path, bool) {
+func (p initialPath) SubPath() (Path, bool) {
 	return nil, false
 }
 
-func (p rootPath) String() string {
-	return "/"
+func (p initialPath) String() string {
+	return "?"
 }
 
 func ParsePath(path string) (Path, error) {
@@ -74,7 +74,7 @@ func ParsePath(path string) (Path, error) {
 	}
 
 	last := len(paths) - 1
-	var p Path = rootPath{}
+	var p Path = initialPath{}
 	for i := last; i >= 0; i-- {
 		if paths[i] == "" {
 			return nil, NewInvalidPathError(path)
