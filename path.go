@@ -67,19 +67,23 @@ func (p initialPath) String() string {
 }
 
 func ParsePath(path string) (Path, error) {
-	paths := strings.Split(strings.Trim(path, "/ "), "/")
+	keys := strings.Split(strings.Trim(path, "/ "), "/")
 
-	if len(paths) == 0 {
-		return nil, NewInvalidPathError(path)
+	return NewPath(keys)
+}
+
+func NewPath(keys []string) (Path, error) {
+	if len(keys) == 0 {
+		return nil, NewInvalidPathError("path is empty")
 	}
 
-	last := len(paths) - 1
+	last := len(keys) - 1
 	var p Path = initialPath{}
 	for i := last; i >= 0; i-- {
-		if paths[i] == "" {
-			return nil, NewInvalidPathError(path)
+		if keys[i] == "" {
+			return nil, NewInvalidPathError("empty key found")
 		}
-		p = p.PushHead(paths[i])
+		p = p.PushHead(keys[i])
 	}
 	return p, nil
 }

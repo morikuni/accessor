@@ -35,14 +35,14 @@ func (e *InvalidKeyError) Error() string {
 	return fmt.Sprintf("%T is not a string", e.Value)
 }
 
-func NewInvalidPathError(path string) error {
-	return &InvalidPathError{path}
+func NewInvalidPathError(message string) error {
+	return &InvalidPathError{message}
 }
 
 type InvalidPathError struct {
-	Path string
+	Message string
 }
 
 func (e *InvalidPathError) Error() string {
-	return fmt.Sprintf("path is invalid: %q", e.Path)
+	return fmt.Sprintf("path is invalid: %s", e.Message)
 }

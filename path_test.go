@@ -47,7 +47,7 @@ func TestParsePath(t *testing.T) {
 			},
 			Expect: Expect{
 				Path: nil,
-				Err:  NewInvalidPathError("/"),
+				Err:  NewInvalidPathError("empty key found"),
 			},
 		},
 		Test{
@@ -57,7 +57,7 @@ func TestParsePath(t *testing.T) {
 			},
 			Expect: Expect{
 				Path: nil,
-				Err:  NewInvalidPathError(""),
+				Err:  NewInvalidPathError("empty key found"),
 			},
 		},
 		Test{
@@ -67,7 +67,7 @@ func TestParsePath(t *testing.T) {
 			},
 			Expect: Expect{
 				Path: nil,
-				Err:  NewInvalidPathError("//"),
+				Err:  NewInvalidPathError("empty key found"),
 			},
 		},
 	}
@@ -77,6 +77,65 @@ func TestParsePath(t *testing.T) {
 			assert := assert.New(t)
 
 			path, err := ParsePath(testCase.Input.Path)
+
+			assert.Equal(testCase.Expect.Path, path)
+			assert.Equal(testCase.Expect.Err, err)
+		})
+	}
+}
+
+func TestNewPath(t *testing.T) {
+	type Input struct {
+		Keys []string
+	}
+	type Expect struct {
+		Path Path
+		Err  error
+	}
+	type Test struct {
+		Title  string
+		Input  Input
+		Expect Expect
+	}
+
+	table := []Test{
+		Test{
+			Title: "basic",
+			Input: Input{
+				Keys: []string{"a", "b", "c"},
+			},
+			Expect: Expect{
+				Path: &basicPath{"a", &basicPath{"b", &basicPath{"c", nil}}},
+				Err:  nil,
+			},
+		},
+		Test{
+			Title: "include empty string",
+			Input: Input{
+				Keys: []string{"a", "", "c"},
+			},
+			Expect: Expect{
+				Path: nil,
+				Err:  NewInvalidPathError("empty key found"),
+			},
+		},
+		Test{
+			Title: "empty",
+			Input: Input{
+				Keys: nil,
+			},
+			Expect: Expect{
+				Path: nil,
+				Err:  NewInvalidPathError("path is empty"),
+			},
+		},
+	}
+
+	for _, testCase := range table {
+		t.Run(testCase.Title, func(t *testing.T) {
+			assert := assert.New(t)
+
+			path, err := NewPath(testCase.Input.Keys)
 
 			assert.Equal(testCase.Expect.Path, path)
 			assert.Equal(testCase.Expect.Err, err)
