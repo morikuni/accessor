@@ -37,3 +37,13 @@ func (a MapAccessor) Unwrap() interface{} {
 	}
 	return result
 }
+
+func (a MapAccessor) Foreach(f func(path Path, value interface{}) error) error {
+	for k, child := range a {
+		err := foreach(child, k, f)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

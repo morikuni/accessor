@@ -22,6 +22,10 @@ func (a ValueAccessor) Unwrap() interface{} {
 	return a.Value
 }
 
+func (a ValueAccessor) Foreach(f func(path Path, value interface{}) error) error {
+	return f(initialPath{}, a.Value)
+}
+
 func (a ValueAccessor) MarshalJSON() ([]byte, error) {
 	return json.Marshal(a.Value)
 }

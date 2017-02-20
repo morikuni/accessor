@@ -16,6 +16,9 @@ type Accessor interface {
 
 	// Unwrap unwraps the object and returns actual value.
 	Unwrap() interface{}
+
+	// Foreach enumerates all value in the object.
+	Foreach(f func(path Path, value interface{}) error) error
 }
 
 func NewAccessor(acc interface{}) (Accessor, error) {

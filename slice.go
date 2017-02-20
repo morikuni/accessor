@@ -49,3 +49,13 @@ func (a SliceAccessor) Unwrap() interface{} {
 	}
 	return result
 }
+
+func (a SliceAccessor) Foreach(f func(path Path, value interface{}) error) error {
+	for i, child := range a {
+		err := foreach(child, strconv.Itoa(i), f)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
