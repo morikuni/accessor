@@ -5,7 +5,7 @@ type MapAccessor map[string]Accessor
 func (a MapAccessor) Get(path Path) (Accessor, error) {
 	child, ok := a[path.Key()]
 	if !ok {
-		return nil, NewNoSuchPathError("no such key", path)
+		return nil, NewNoSuchPathError("no such key", path.Key())
 	}
 
 	return getFromChild(child, path)
@@ -14,7 +14,7 @@ func (a MapAccessor) Get(path Path) (Accessor, error) {
 func (a MapAccessor) Set(path Path, value interface{}) error {
 	child, ok := a[path.Key()]
 	if !ok {
-		return NewNoSuchPathError("no such key", path)
+		return NewNoSuchPathError("no such key", path.Key())
 	}
 
 	sub, ok := path.SubPath()

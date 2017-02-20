@@ -62,11 +62,7 @@ func TestMapAccessor_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: nil,
-				Err: &NoSuchPathError{
-					Message: "no such key",
-					Key:     "x",
-					Stack:   nil,
-				},
+				Err:      NewNoSuchPathError("no such key", "x"),
 			},
 		},
 		Test{
@@ -83,11 +79,7 @@ func TestMapAccessor_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: nil,
-				Err: &NoSuchPathError{
-					Message: "no such key",
-					Key:     "x",
-					Stack:   []string{"b", "a"},
-				},
+				Err:      NewNoSuchPathError("no such key", "x", "b", "a"),
 			},
 		},
 	}
@@ -174,11 +166,7 @@ func TestMapAccessor_Set(t *testing.T) {
 				Accessor: MapAccessor(map[string]Accessor{
 					"a": DummyAccessor{1},
 				}),
-				Err: &NoSuchPathError{
-					Message: "no such key",
-					Key:     "x",
-					Stack:   nil,
-				},
+				Err: NewNoSuchPathError("no such key", "x"),
 			},
 		},
 		Test{
@@ -202,11 +190,7 @@ func TestMapAccessor_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Err: &NoSuchPathError{
-					Message: "no such key",
-					Key:     "x",
-					Stack:   []string{"b", "a"},
-				},
+				Err: NewNoSuchPathError("no such key", "x", "b", "a"),
 			},
 		},
 	}

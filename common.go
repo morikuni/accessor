@@ -1,7 +1,7 @@
 package accessor
 
-type pathPusher interface {
-	PushPath(path string)
+type keyPusher interface {
+	PushKey(path string)
 }
 
 func getFromChild(child Accessor, path Path) (Accessor, error) {
@@ -12,8 +12,8 @@ func getFromChild(child Accessor, path Path) (Accessor, error) {
 
 	r, err := child.Get(subPath)
 	if err != nil {
-		if pe, ok := err.(pathPusher); ok {
-			pe.PushPath(path.Key())
+		if pe, ok := err.(keyPusher); ok {
+			pe.PushKey(path.Key())
 		}
 		return nil, err
 	}
@@ -23,8 +23,8 @@ func getFromChild(child Accessor, path Path) (Accessor, error) {
 func setToChild(child Accessor, value interface{}, key string, path Path) error {
 	err := child.Set(path, value)
 	if err != nil {
-		if pe, ok := err.(pathPusher); ok {
-			pe.PushPath(key)
+		if pe, ok := err.(keyPusher); ok {
+			pe.PushKey(key)
 		}
 		return err
 	}

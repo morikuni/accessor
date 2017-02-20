@@ -11,11 +11,11 @@ type ValueAccessor struct {
 }
 
 func (a ValueAccessor) Get(path Path) (Accessor, error) {
-	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path)
+	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path.Key())
 }
 
 func (a ValueAccessor) Set(path Path, _ interface{}) error {
-	return NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path)
+	return NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path.Key())
 }
 
 func (a ValueAccessor) Unwrap() interface{} {

@@ -63,11 +63,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: nil,
-				Err: &NoSuchPathError{
-					Message: "not a number",
-					Key:     "x",
-					Stack:   nil,
-				},
+				Err:      NewNoSuchPathError("not a number", "x"),
 			},
 		},
 		Test{
@@ -80,11 +76,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: nil,
-				Err: &NoSuchPathError{
-					Message: "index out of range",
-					Key:     "1",
-					Stack:   nil,
-				},
+				Err:      NewNoSuchPathError("index out of range", "1"),
 			},
 		},
 		Test{
@@ -101,11 +93,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: nil,
-				Err: &NoSuchPathError{
-					Message: "index out of range",
-					Key:     "1",
-					Stack:   []string{"0", "0"},
-				},
+				Err:      NewNoSuchPathError("index out of range", "1", "0", "0"),
 			},
 		},
 	}
@@ -192,11 +180,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				Accessor: SliceAccessor([]Accessor{
 					DummyAccessor{1},
 				}),
-				Err: &NoSuchPathError{
-					Message: "not a number",
-					Key:     "x",
-					Stack:   nil,
-				},
+				Err: NewNoSuchPathError("not a number", "x"),
 			},
 		},
 		Test{
@@ -212,11 +196,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				Accessor: SliceAccessor([]Accessor{
 					DummyAccessor{1},
 				}),
-				Err: &NoSuchPathError{
-					Message: "index out of range",
-					Key:     "1",
-					Stack:   nil,
-				},
+				Err: NewNoSuchPathError("index out of range", "1"),
 			},
 		},
 		Test{
@@ -240,11 +220,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 						}),
 					}),
 				}),
-				Err: &NoSuchPathError{
-					Message: "index out of range",
-					Key:     "1",
-					Stack:   []string{"0", "0"},
-				},
+				Err: NewNoSuchPathError("index out of range", "1", "0", "0"),
 			},
 		},
 	}

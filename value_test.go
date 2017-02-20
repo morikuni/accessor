@@ -64,11 +64,7 @@ func TestValueAccessor_Get(t *testing.T) {
 			a, err := bt.Get(path)
 
 			assert.Nil(a)
-			assert.Equal(&NoSuchPathError{
-				Message: testCase.Expect.ErrorMessage,
-				Key:     "a",
-				Stack:   nil,
-			}, err)
+			assert.Equal(NewNoSuchPathError(testCase.Expect.ErrorMessage, "a"), err)
 		})
 	}
 }
@@ -129,11 +125,7 @@ func TestValueAccessor_Set(t *testing.T) {
 			err = bt.Set(path, DummyAccessor{1})
 
 			assert.Equal(bt.Value, testCase.Input.Value)
-			assert.Equal(&NoSuchPathError{
-				Message: testCase.Expect.ErrorMessage,
-				Key:     "a",
-				Stack:   nil,
-			}, err)
+			assert.Equal(NewNoSuchPathError(testCase.Expect.ErrorMessage, "a"), err)
 		})
 	}
 }

@@ -9,11 +9,11 @@ type SliceAccessor []Accessor
 func (a SliceAccessor) Get(path Path) (Accessor, error) {
 	i, err := strconv.Atoi(path.Key())
 	if err != nil {
-		return nil, NewNoSuchPathError("not a number", path)
+		return nil, NewNoSuchPathError("not a number", path.Key())
 	}
 
 	if i < 0 || i >= len(a) {
-		return nil, NewNoSuchPathError("index out of range", path)
+		return nil, NewNoSuchPathError("index out of range", path.Key())
 	}
 
 	return getFromChild(a[i], path)
@@ -22,11 +22,11 @@ func (a SliceAccessor) Get(path Path) (Accessor, error) {
 func (a SliceAccessor) Set(path Path, value interface{}) error {
 	i, err := strconv.Atoi(path.Key())
 	if err != nil {
-		return NewNoSuchPathError("not a number", path)
+		return NewNoSuchPathError("not a number", path.Key())
 	}
 
 	if i < 0 || i >= len(a) {
-		return NewNoSuchPathError("index out of range", path)
+		return NewNoSuchPathError("index out of range", path.Key())
 	}
 
 	sub, ok := path.SubPath()

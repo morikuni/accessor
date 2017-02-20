@@ -2,25 +2,28 @@ package accessor
 
 import (
 	"fmt"
-	"strings"
 )
 
-func NewNoSuchPathError(message string, path Path) error {
-	return &NoSuchPathError{message, path.Key(), nil}
+func NewNoSuchPathError(message string, key string, keys ...string) *NoSuchPathError {
+	var path Path = initialPath{}
+	for _, k := range keys {
+		path = path.PushKey(k)
+	}
+	return &NoSuchPathError{message, key, path}
 }
 
 type NoSuchPathError struct {
 	Message string
 	Key     string
-	Stack   []string
+	Path    Path
 }
 
 func (e *NoSuchPathError) Error() string {
-	return fmt.Sprintf("%s: about %q: at %s", e.Message, e.Key, strings.Join(e.Stack, "/")+"/")
+	return fmt.Sprintf("%s: about %q: at %s", e.Message, e.Key, e.Path)
 }
 
-func (e *NoSuchPathError) PushPath(path string) {
-	e.Stack = append(e.Stack, path)
+func (e *NoSuchPathError) PushKey(key string) {
+	e.Path = e.Path.PushKey(key)
 }
 
 func NewInvalidKeyError(v interface{}) error {
