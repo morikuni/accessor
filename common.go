@@ -33,7 +33,7 @@ func setToChild(child Accessor, value interface{}, key string, path Path) error 
 
 func foreach(child Accessor, key string, f func(Path, interface{}) error) error {
 	return child.Foreach(func(path Path, v interface{}) error {
-		p := path.PushHead(key)
+		p := path.PushKey(key)
 		return f(p, v)
 	})
 }

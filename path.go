@@ -11,7 +11,7 @@ type Path interface {
 
 	Key() string
 	SubPath() (Path, bool)
-	PushHead(key string) Path
+	PushKey(key string) Path
 }
 
 type basicPath struct {
@@ -19,7 +19,7 @@ type basicPath struct {
 	tail Path
 }
 
-func (p *basicPath) PushHead(key string) Path {
+func (p *basicPath) PushKey(key string) Path {
 	return &basicPath{
 		key,
 		p,
@@ -50,7 +50,7 @@ func (p *basicPath) String() string {
 
 type initialPath struct{}
 
-func (p initialPath) PushHead(key string) Path {
+func (p initialPath) PushKey(key string) Path {
 	return &basicPath{
 		key,
 		nil,
@@ -86,7 +86,7 @@ func NewPath(keys []string) (Path, error) {
 		if keys[i] == "" {
 			return nil, NewInvalidPathError("empty key found")
 		}
-		p = p.PushHead(keys[i])
+		p = p.PushKey(keys[i])
 	}
 	return p, nil
 }
