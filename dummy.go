@@ -21,5 +21,5 @@ func (a DummyAccessor) Unwrap() interface{} {
 }
 
 func (a DummyAccessor) Foreach(f func(path Path, value interface{}) error) error {
-	return fmt.Errorf("this is dummy accessor: %d", a.ID)
+	return f(initialPath{}, a.ID)
 }

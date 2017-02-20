@@ -1,8 +1,10 @@
 package accessor
 
 import (
-	"github.com/stretchr/testify/assert"
+	"errors"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSliceAccessor_Get(t *testing.T) {
@@ -315,6 +317,106 @@ func TestSliceAccessor_Unwrap(t *testing.T) {
 			assert := assert.New(t)
 
 			assert.Equal(testCase.Expect.Accessor, testCase.Input.Accessor.Unwrap())
+		})
+	}
+}
+
+func TestSliceAccessor_Foreach(t *testing.T) {
+	type Input struct {
+		Accessor     Accessor
+		ReturnsError bool
+	}
+	type Expect struct {
+		Paths        []string
+		ReturnsError bool
+	}
+	type Test struct {
+		Title  string
+		Input  Input
+		Expect Expect
+	}
+
+	table := []Test{
+		Test{
+			Title: "success",
+			Input: Input{
+				Accessor: SliceAccessor([]Accessor{
+					DummyAccessor{1},
+				}),
+				ReturnsError: false,
+			},
+			Expect: Expect{
+				Paths:        []string{"0"},
+				ReturnsError: false,
+			},
+		},
+		Test{
+			Title: "success nested",
+			Input: Input{
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
+						}),
+						DummyAccessor{1},
+					}),
+				}),
+				ReturnsError: false,
+			},
+			Expect: Expect{
+				Paths: []string{
+					"0/0/0",
+					"0/1",
+				},
+				ReturnsError: false,
+			},
+		},
+		Test{
+			Title: "error",
+			Input: Input{
+				Accessor: SliceAccessor([]Accessor{
+					SliceAccessor([]Accessor{
+						SliceAccessor([]Accessor{
+							DummyAccessor{1},
+						}),
+						DummyAccessor{1},
+					}),
+				}),
+				ReturnsError: true,
+			},
+			Expect: Expect{
+				Paths:        []string{},
+				ReturnsError: true,
+			},
+		},
+	}
+
+	testErr := errors.New("test error")
+	for _, testCase := range table {
+		t.Run(testCase.Title, func(t *testing.T) {
+			assert := assert.New(t)
+
+			expextedPaths := map[string]struct{}{}
+			for _, p := range testCase.Expect.Paths {
+				expextedPaths[p] = struct{}{}
+			}
+			var expextedErr error = nil
+			if testCase.Expect.ReturnsError {
+				expextedErr = testErr
+			}
+
+			paths := map[string]struct{}{}
+			err := testCase.Input.Accessor.Foreach(func(path Path, _ interface{}) error {
+				if testCase.Input.ReturnsError {
+					return testErr
+				} else {
+					paths[path.String()] = struct{}{}
+					return nil
+				}
+			})
+
+			assert.Equal(expextedPaths, paths)
+			assert.Equal(expextedErr, err)
 		})
 	}
 }

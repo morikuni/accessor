@@ -1,6 +1,7 @@
 package accessor
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -280,6 +281,106 @@ func TestMapAccessor_Unwrap(t *testing.T) {
 			assert := assert.New(t)
 
 			assert.Equal(testCase.Expect.Accessor, testCase.Input.Accessor.Unwrap())
+		})
+	}
+}
+
+func TestMapAccessor_Foreach(t *testing.T) {
+	type Input struct {
+		Accessor     Accessor
+		ReturnsError bool
+	}
+	type Expect struct {
+		Paths        []string
+		ReturnsError bool
+	}
+	type Test struct {
+		Title  string
+		Input  Input
+		Expect Expect
+	}
+
+	table := []Test{
+		Test{
+			Title: "success",
+			Input: Input{
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": DummyAccessor{1},
+				}),
+				ReturnsError: false,
+			},
+			Expect: Expect{
+				Paths:        []string{"a"},
+				ReturnsError: false,
+			},
+		},
+		Test{
+			Title: "success nested",
+			Input: Input{
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
+						}),
+						"d": DummyAccessor{1},
+					}),
+				}),
+				ReturnsError: false,
+			},
+			Expect: Expect{
+				Paths: []string{
+					"a/b/c",
+					"a/d",
+				},
+				ReturnsError: false,
+			},
+		},
+		Test{
+			Title: "error",
+			Input: Input{
+				Accessor: MapAccessor(map[string]Accessor{
+					"a": MapAccessor(map[string]Accessor{
+						"b": MapAccessor(map[string]Accessor{
+							"c": DummyAccessor{1},
+						}),
+						"d": DummyAccessor{1},
+					}),
+				}),
+				ReturnsError: true,
+			},
+			Expect: Expect{
+				Paths:        []string{},
+				ReturnsError: true,
+			},
+		},
+	}
+
+	testErr := errors.New("test error")
+	for _, testCase := range table {
+		t.Run(testCase.Title, func(t *testing.T) {
+			assert := assert.New(t)
+
+			expextedPaths := map[string]struct{}{}
+			for _, p := range testCase.Expect.Paths {
+				expextedPaths[p] = struct{}{}
+			}
+			var expextedErr error = nil
+			if testCase.Expect.ReturnsError {
+				expextedErr = testErr
+			}
+
+			paths := map[string]struct{}{}
+			err := testCase.Input.Accessor.Foreach(func(path Path, _ interface{}) error {
+				if testCase.Input.ReturnsError {
+					return testErr
+				} else {
+					paths[path.String()] = struct{}{}
+					return nil
+				}
+			})
+
+			assert.Equal(expextedPaths, paths)
+			assert.Equal(expextedErr, err)
 		})
 	}
 }
