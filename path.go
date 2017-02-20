@@ -2,10 +2,13 @@ package accessor
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 )
 
 type Path interface {
+	fmt.Stringer
+
 	Key() string
 	SubPath() (Path, bool)
 	PushHead(key string) Path
