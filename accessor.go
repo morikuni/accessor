@@ -55,6 +55,6 @@ func NewAccessor(acc interface{}) (Accessor, error) {
 		}
 		return SliceAccessor(sa), nil
 	default:
-		return ValueAccessor{acc}, nil
+		return &ValueAccessor{acc}, nil
 	}
 }

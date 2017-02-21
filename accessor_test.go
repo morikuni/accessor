@@ -31,7 +31,7 @@ func TestNewAccessor(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: MapAccessor(map[string]Accessor{
-					"int": ValueAccessor{1},
+					"int": &ValueAccessor{1},
 				}),
 				Err: nil,
 			},
@@ -45,7 +45,7 @@ func TestNewAccessor(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: MapAccessor(map[string]Accessor{
-					"int": ValueAccessor{1},
+					"int": &ValueAccessor{1},
 				}),
 				Err: nil,
 			},
@@ -61,9 +61,9 @@ func TestNewAccessor(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: SliceAccessor([]Accessor{
-					ValueAccessor{1},
-					ValueAccessor{"string"},
-					ValueAccessor{true},
+					&ValueAccessor{1},
+					&ValueAccessor{"string"},
+					&ValueAccessor{true},
 				}),
 				Err: nil,
 			},
@@ -74,7 +74,7 @@ func TestNewAccessor(t *testing.T) {
 				Value: time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC),
 			},
 			Expect: Expect{
-				Accessor: ValueAccessor{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
+				Accessor: &ValueAccessor{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
 				Err:      nil,
 			},
 		},
@@ -98,18 +98,18 @@ func TestNewAccessor(t *testing.T) {
 			},
 			Expect: Expect{
 				Accessor: MapAccessor(map[string]Accessor{
-					"name": ValueAccessor{"me"},
-					"age":  ValueAccessor{18},
+					"name": &ValueAccessor{"me"},
+					"age":  &ValueAccessor{18},
 					"friends": SliceAccessor([]Accessor{
 						MapAccessor(map[string]Accessor{
-							"name": ValueAccessor{"hello"},
+							"name": &ValueAccessor{"hello"},
 						}),
 						MapAccessor(map[string]Accessor{
-							"name": ValueAccessor{"world"},
+							"name": &ValueAccessor{"world"},
 						}),
 					}),
-					"birthday": ValueAccessor{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
-					"nickname": ValueAccessor{nil},
+					"birthday": &ValueAccessor{time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC)},
+					"nickname": &ValueAccessor{nil},
 				}),
 				Err: nil,
 			},

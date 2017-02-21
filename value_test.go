@@ -10,10 +10,12 @@ import (
 
 func TestValueAccessor_Get(t *testing.T) {
 	type Input struct {
-		Value interface{}
+		Accessor Accessor
+		Path     Path
 	}
 	type Expect struct {
-		ErrorMessage string
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -23,34 +25,26 @@ func TestValueAccessor_Get(t *testing.T) {
 
 	table := []Test{
 		{
-			Title:  "int",
-			Input:  Input{1},
-			Expect: Expect{"int(1) has no key"},
+			Title: "error",
+			Input: Input{
+				Accessor: &ValueAccessor{1},
+				Path:     newPath("a"),
+			},
+			Expect: Expect{
+				Accessor: nil,
+				Err:      NewNoSuchPathError("int(1) has no key", "a"),
+			},
 		},
 		{
-			Title:  "float",
-			Input:  Input{1.2},
-			Expect: Expect{"float64(1.2) has no key"},
-		},
-		{
-			Title:  "string",
-			Input:  Input{"hello"},
-			Expect: Expect{"string(hello) has no key"},
-		},
-		{
-			Title:  "bool",
-			Input:  Input{true},
-			Expect: Expect{"bool(true) has no key"},
-		},
-		{
-			Title:  "time.Time",
-			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
-			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
-		},
-		{
-			Title:  "nil",
-			Input:  Input{nil},
-			Expect: Expect{"<nil>(<nil>) has no key"},
+			Title: "phantom path",
+			Input: Input{
+				Accessor: &ValueAccessor{1},
+				Path:     PhantomPath,
+			},
+			Expect: Expect{
+				Accessor: &ValueAccessor{1},
+				Err:      nil,
+			},
 		},
 	}
 
@@ -58,23 +52,24 @@ func TestValueAccessor_Get(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			path, err := ParsePath("a")
-			assert.Nil(err)
-			bt := ValueAccessor{testCase.Input.Value}
-			a, err := bt.Get(path)
+			acc := testCase.Input.Accessor
+			value, err := acc.Get(testCase.Input.Path)
 
-			assert.Nil(a)
-			assert.Equal(NewNoSuchPathError(testCase.Expect.ErrorMessage, "a"), err)
+			assert.Equal(testCase.Expect.Accessor, value)
+			assert.Equal(testCase.Expect.Err, err)
 		})
 	}
 }
 
 func TestValueAccessor_Set(t *testing.T) {
 	type Input struct {
-		Value interface{}
+		Accessor Accessor
+		Path     Path
+		BeSet    interface{}
 	}
 	type Expect struct {
-		ErrorMessage string
+		Accessor Accessor
+		Err      error
 	}
 	type Test struct {
 		Title  string
@@ -84,34 +79,28 @@ func TestValueAccessor_Set(t *testing.T) {
 
 	table := []Test{
 		{
-			Title:  "int",
-			Input:  Input{1},
-			Expect: Expect{"int(1) has no key"},
+			Title: "error",
+			Input: Input{
+				Accessor: &ValueAccessor{1},
+				Path:     newPath("a"),
+				BeSet:    2,
+			},
+			Expect: Expect{
+				Accessor: &ValueAccessor{1},
+				Err:      NewNoSuchPathError("int(1) has no key", "a"),
+			},
 		},
 		{
-			Title:  "float",
-			Input:  Input{1.2},
-			Expect: Expect{"float64(1.2) has no key"},
-		},
-		{
-			Title:  "string",
-			Input:  Input{"hello"},
-			Expect: Expect{"string(hello) has no key"},
-		},
-		{
-			Title:  "bool",
-			Input:  Input{true},
-			Expect: Expect{"bool(true) has no key"},
-		},
-		{
-			Title:  "time.Time",
-			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
-			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
-		},
-		{
-			Title:  "nil",
-			Input:  Input{nil},
-			Expect: Expect{"<nil>(<nil>) has no key"},
+			Title: "phantom path",
+			Input: Input{
+				Accessor: &ValueAccessor{1},
+				Path:     PhantomPath,
+				BeSet:    2,
+			},
+			Expect: Expect{
+				Accessor: &ValueAccessor{2},
+				Err:      nil,
+			},
 		},
 	}
 
@@ -119,13 +108,11 @@ func TestValueAccessor_Set(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			path, err := ParsePath("a")
-			assert.Nil(err)
-			bt := ValueAccessor{testCase.Input.Value}
-			err = bt.Set(path, DummyAccessor{1})
+			acc := testCase.Input.Accessor
+			err := acc.Set(testCase.Input.Path, testCase.Input.BeSet)
 
-			assert.Equal(bt.Value, testCase.Input.Value)
-			assert.Equal(NewNoSuchPathError(testCase.Expect.ErrorMessage, "a"), err)
+			assert.Equal(testCase.Expect.Accessor, acc)
+			assert.Equal(testCase.Expect.Err, err)
 		})
 	}
 }
@@ -180,7 +167,8 @@ func TestValueAccessor_Unwrap(t *testing.T) {
 		t.Run(testCase.Title, func(t *testing.T) {
 			assert := assert.New(t)
 
-			assert.Equal(testCase.Expect.Value, ValueAccessor{testCase.Input.Value}.Unwrap())
+			acc := &ValueAccessor{testCase.Input.Value}
+			assert.Equal(testCase.Expect.Value, acc.Unwrap())
 		})
 	}
 }
@@ -204,7 +192,7 @@ func TestValueAccessor_Foreach(t *testing.T) {
 		{
 			Title: "success",
 			Input: Input{
-				Accessor:     ValueAccessor{1},
+				Accessor:     &ValueAccessor{1},
 				ReturnsError: false,
 			},
 			Expect: Expect{
@@ -215,7 +203,7 @@ func TestValueAccessor_Foreach(t *testing.T) {
 		{
 			Title: "error",
 			Input: Input{
-				Accessor:     ValueAccessor{1},
+				Accessor:     &ValueAccessor{1},
 				ReturnsError: true,
 			},
 			Expect: Expect{

@@ -101,3 +101,11 @@ func NewPath(keys []string) (Path, error) {
 	}
 	return p, nil
 }
+
+func newPath(keys ...string) Path {
+	p, err := NewPath(keys)
+	if err != nil {
+		panic(err)
+	}
+	return p
+}

@@ -12,32 +12,39 @@ type ValueAccessor struct {
 }
 
 // Get implements Accessor.
-func (a ValueAccessor) Get(path Path) (Accessor, error) {
+func (a *ValueAccessor) Get(path Path) (Accessor, error) {
+	if path == PhantomPath {
+		return a, nil
+	}
 	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path.Key())
 }
 
 // Set implements Accessor.
-func (a ValueAccessor) Set(path Path, _ interface{}) error {
+func (a *ValueAccessor) Set(path Path, value interface{}) error {
+	if path == PhantomPath {
+		a.Value = value
+		return nil
+	}
 	return NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path.Key())
 }
 
 // Unwrap implements Accessor.
-func (a ValueAccessor) Unwrap() interface{} {
+func (a *ValueAccessor) Unwrap() interface{} {
 	return a.Value
 }
 
 // Foreach implements Accessor.
-func (a ValueAccessor) Foreach(f func(path Path, value interface{}) error) error {
+func (a *ValueAccessor) Foreach(f func(path Path, value interface{}) error) error {
 	return f(PhantomPath, a.Value)
 }
 
 // MarshalJSON implements encoding/json.Marshaler.
-func (a ValueAccessor) MarshalJSON() ([]byte, error) {
+func (a *ValueAccessor) MarshalJSON() ([]byte, error) {
 	return json.Marshal(a.Value)
 }
 
 // MarshalText implements encoding.TextMarshaler.
-func (a ValueAccessor) MarshalText() ([]byte, error) {
+func (a *ValueAccessor) MarshalText() ([]byte, error) {
 	if m, ok := a.Value.(encoding.TextMarshaler); ok {
 		return m.MarshalText()
 	}
