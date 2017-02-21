@@ -348,7 +348,7 @@ func TestMapAccessor_Foreach(t *testing.T) {
 			for _, p := range testCase.Expect.Paths {
 				expextedPaths[p] = struct{}{}
 			}
-			var expextedErr error = nil
+			var expextedErr error
 			if testCase.Expect.ReturnsError {
 				expextedErr = testErr
 			}
@@ -357,10 +357,9 @@ func TestMapAccessor_Foreach(t *testing.T) {
 			err := testCase.Input.Accessor.Foreach(func(path Path, _ interface{}) error {
 				if testCase.Input.ReturnsError {
 					return testErr
-				} else {
-					paths[path.String()] = struct{}{}
-					return nil
 				}
+				paths[path.String()] = struct{}{}
+				return nil
 			})
 
 			assert.Equal(expextedPaths, paths)

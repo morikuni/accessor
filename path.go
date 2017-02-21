@@ -6,11 +6,17 @@ import (
 	"strings"
 )
 
+// Path is a sequence of object keys.
 type Path interface {
 	fmt.Stringer
 
+	// Key returns a head key of the sequence.
 	Key() string
+
+	// SubPath returns a path excluding the begining.
 	SubPath() (Path, bool)
+
+	// PushKey add a key to the head of the sequence.
 	PushKey(key string) Path
 }
 
@@ -69,12 +75,14 @@ func (p initialPath) String() string {
 	return "?"
 }
 
+// ParsePath creates a Path from a slash(/)-separeted-keys.
 func ParsePath(path string) (Path, error) {
 	keys := strings.Split(strings.Trim(path, "/ "), "/")
 
 	return NewPath(keys)
 }
 
+// NewPath creates a Path from keys.
 func NewPath(keys []string) (Path, error) {
 	if len(keys) == 0 {
 		return nil, NewInvalidPathError("path is empty")

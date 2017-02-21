@@ -21,6 +21,8 @@ type Accessor interface {
 	Foreach(f func(path Path, value interface{}) error) error
 }
 
+// NewAccessor creates a new Accessor from a object.
+// The object is a map[string]interface{} or []interface{}.
 func NewAccessor(acc interface{}) (Accessor, error) {
 	if a, ok := acc.(Accessor); ok {
 		return a, nil

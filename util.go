@@ -1,5 +1,6 @@
 package accessor
 
+// Get finds a value from the object by the path.
 func Get(i interface{}, path string) (interface{}, error) {
 	if path == "/" {
 		return i, nil
@@ -22,6 +23,7 @@ func Get(i interface{}, path string) (interface{}, error) {
 	return acc.Unwrap(), nil
 }
 
+// Update updates a value in the object by the path and returns updated object.
 func Update(i interface{}, path string, value interface{}) (interface{}, error) {
 	if path == "/" {
 		return nil, NewInvalidPathError(path)

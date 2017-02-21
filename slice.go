@@ -4,8 +4,10 @@ import (
 	"strconv"
 )
 
+// SliceAccessor is the Accessor for a slice.
 type SliceAccessor []Accessor
 
+// Get implements Accessor.
 func (a SliceAccessor) Get(path Path) (Accessor, error) {
 	i, err := strconv.Atoi(path.Key())
 	if err != nil {
@@ -19,6 +21,7 @@ func (a SliceAccessor) Get(path Path) (Accessor, error) {
 	return getFromChild(a[i], path)
 }
 
+// Set implements Accessor.
 func (a SliceAccessor) Set(path Path, value interface{}) error {
 	i, err := strconv.Atoi(path.Key())
 	if err != nil {
@@ -42,6 +45,7 @@ func (a SliceAccessor) Set(path Path, value interface{}) error {
 	return setToChild(a[i], value, path.Key(), sub)
 }
 
+// Unwrap implements Accessor.
 func (a SliceAccessor) Unwrap() interface{} {
 	result := make([]interface{}, len(a))
 	for i, v := range a {
@@ -50,6 +54,7 @@ func (a SliceAccessor) Unwrap() interface{} {
 	return result
 }
 
+// Foreach implements Accessor.
 func (a SliceAccessor) Foreach(f func(path Path, value interface{}) error) error {
 	for i, child := range a {
 		err := foreach(child, strconv.Itoa(i), f)
