@@ -13,7 +13,7 @@ func NewNoSuchPathError(message string, key string, keys ...string) *NoSuchPathE
 	return &NoSuchPathError{message, key, path}
 }
 
-// NoSuchPathError is returnd when no key was found in the object.
+// NoSuchPathError is returned when no key was found in the object.
 type NoSuchPathError struct {
 	Message string
 	Key     string
@@ -48,7 +48,7 @@ func NewInvalidPathError(message string) error {
 	return &InvalidPathError{message}
 }
 
-// InvalidPathError is returnd when failing to create a Path.
+// InvalidPathError is returned when failing to create a Path.
 type InvalidPathError struct {
 	Message string
 }

@@ -13,7 +13,7 @@ type Path interface {
 	// Key returns a head key of the sequence.
 	Key() string
 
-	// SubPath returns a path excluding the begining.
+	// SubPath returns a path excluding the beginning.
 	SubPath() (Path, bool)
 
 	// PushKey add a key to the head of the sequence.
