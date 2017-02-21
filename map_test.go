@@ -22,7 +22,7 @@ func TestMapAccessor_Get(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -35,7 +35,7 @@ func TestMapAccessor_Get(t *testing.T) {
 				Err:      nil,
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -52,7 +52,7 @@ func TestMapAccessor_Get(t *testing.T) {
 				Err:      nil,
 			},
 		},
-		Test{
+		{
 			Title: "path error",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -65,7 +65,7 @@ func TestMapAccessor_Get(t *testing.T) {
 				Err:      NewNoSuchPathError("no such key", "x"),
 			},
 		},
-		Test{
+		{
 			Title: "path error nested",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -115,7 +115,7 @@ func TestMapAccessor_Set(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -131,7 +131,7 @@ func TestMapAccessor_Set(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -153,7 +153,7 @@ func TestMapAccessor_Set(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "path error",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -169,7 +169,7 @@ func TestMapAccessor_Set(t *testing.T) {
 				Err: NewNoSuchPathError("no such key", "x"),
 			},
 		},
-		Test{
+		{
 			Title: "path error nested",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -224,7 +224,7 @@ func TestMapAccessor_Unwrap(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -237,7 +237,7 @@ func TestMapAccessor_Unwrap(t *testing.T) {
 				},
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -285,7 +285,7 @@ func TestMapAccessor_Foreach(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -298,7 +298,7 @@ func TestMapAccessor_Foreach(t *testing.T) {
 				ReturnsError: false,
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{
@@ -319,7 +319,7 @@ func TestMapAccessor_Foreach(t *testing.T) {
 				ReturnsError: false,
 			},
 		},
-		Test{
+		{
 			Title: "error",
 			Input: Input{
 				Accessor: MapAccessor(map[string]Accessor{

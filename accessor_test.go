@@ -22,7 +22,7 @@ func TestNewAccessor(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "map[string]interface{}",
 			Input: Input{
 				Value: map[string]interface{}{
@@ -36,7 +36,7 @@ func TestNewAccessor(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "map[interface{}]interface{}",
 			Input: Input{
 				Value: map[interface{}]interface{}{
@@ -50,7 +50,7 @@ func TestNewAccessor(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "[]interface{}",
 			Input: Input{
 				Value: []interface{}{
@@ -68,7 +68,7 @@ func TestNewAccessor(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "basic type",
 			Input: Input{
 				Value: time.Date(1992, 6, 18, 12, 34, 56, 78, time.UTC),
@@ -78,7 +78,7 @@ func TestNewAccessor(t *testing.T) {
 				Err:      nil,
 			},
 		},
-		Test{
+		{
 			Title: "complex",
 			Input: Input{
 				Value: map[string]interface{}{

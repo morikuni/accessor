@@ -23,7 +23,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -36,7 +36,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Err:      nil,
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -53,7 +53,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Err:      nil,
 			},
 		},
-		Test{
+		{
 			Title: "not a number",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -66,7 +66,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Err:      NewNoSuchPathError("not a number", "x"),
 			},
 		},
-		Test{
+		{
 			Title: "index out of range",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -79,7 +79,7 @@ func TestSliceAccessor_Get(t *testing.T) {
 				Err:      NewNoSuchPathError("index out of range", "1"),
 			},
 		},
-		Test{
+		{
 			Title: "path error nested",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -129,7 +129,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -145,7 +145,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -167,7 +167,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				Err: nil,
 			},
 		},
-		Test{
+		{
 			Title: "not a number",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -183,7 +183,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				Err: NewNoSuchPathError("not a number", "x"),
 			},
 		},
-		Test{
+		{
 			Title: "index out of range",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -199,7 +199,7 @@ func TestSliceAccessor_Set(t *testing.T) {
 				Err: NewNoSuchPathError("index out of range", "1"),
 			},
 		},
-		Test{
+		{
 			Title: "path error nested",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -254,7 +254,7 @@ func TestSliceAccessor_Unwrap(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -265,7 +265,7 @@ func TestSliceAccessor_Unwrap(t *testing.T) {
 				Accessor: []interface{}{1},
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -313,7 +313,7 @@ func TestSliceAccessor_Foreach(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -326,7 +326,7 @@ func TestSliceAccessor_Foreach(t *testing.T) {
 				ReturnsError: false,
 			},
 		},
-		Test{
+		{
 			Title: "success nested",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{
@@ -347,7 +347,7 @@ func TestSliceAccessor_Foreach(t *testing.T) {
 				ReturnsError: false,
 			},
 		},
-		Test{
+		{
 			Title: "error",
 			Input: Input{
 				Accessor: SliceAccessor([]Accessor{

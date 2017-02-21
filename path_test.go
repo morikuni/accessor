@@ -20,7 +20,7 @@ func TestParsePath(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "basic",
 			Input: Input{
 				Path: "a/b/0",
@@ -30,7 +30,7 @@ func TestParsePath(t *testing.T) {
 				Err:  nil,
 			},
 		},
-		Test{
+		{
 			Title: "many slash",
 			Input: Input{
 				Path: "/a/b/0/",
@@ -40,7 +40,7 @@ func TestParsePath(t *testing.T) {
 				Err:  nil,
 			},
 		},
-		Test{
+		{
 			Title: "only slash",
 			Input: Input{
 				Path: "/",
@@ -50,7 +50,7 @@ func TestParsePath(t *testing.T) {
 				Err:  NewInvalidPathError("empty key found"),
 			},
 		},
-		Test{
+		{
 			Title: "empty",
 			Input: Input{
 				Path: "",
@@ -60,7 +60,7 @@ func TestParsePath(t *testing.T) {
 				Err:  NewInvalidPathError("empty key found"),
 			},
 		},
-		Test{
+		{
 			Title: "empty key",
 			Input: Input{
 				Path: "//",
@@ -99,7 +99,7 @@ func TestNewPath(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "basic",
 			Input: Input{
 				Keys: []string{"a", "b", "c"},
@@ -109,7 +109,7 @@ func TestNewPath(t *testing.T) {
 				Err:  nil,
 			},
 		},
-		Test{
+		{
 			Title: "include empty string",
 			Input: Input{
 				Keys: []string{"a", "", "c"},
@@ -119,7 +119,7 @@ func TestNewPath(t *testing.T) {
 				Err:  NewInvalidPathError("empty key found"),
 			},
 		},
-		Test{
+		{
 			Title: "empty",
 			Input: Input{
 				Keys: nil,

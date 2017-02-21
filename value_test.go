@@ -22,32 +22,32 @@ func TestValueAccessor_Get(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title:  "int",
 			Input:  Input{1},
 			Expect: Expect{"int(1) has no key"},
 		},
-		Test{
+		{
 			Title:  "float",
 			Input:  Input{1.2},
 			Expect: Expect{"float64(1.2) has no key"},
 		},
-		Test{
+		{
 			Title:  "string",
 			Input:  Input{"hello"},
 			Expect: Expect{"string(hello) has no key"},
 		},
-		Test{
+		{
 			Title:  "bool",
 			Input:  Input{true},
 			Expect: Expect{"bool(true) has no key"},
 		},
-		Test{
+		{
 			Title:  "time.Time",
 			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
 		},
-		Test{
+		{
 			Title:  "nil",
 			Input:  Input{nil},
 			Expect: Expect{"<nil>(<nil>) has no key"},
@@ -83,32 +83,32 @@ func TestValueAccessor_Set(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title:  "int",
 			Input:  Input{1},
 			Expect: Expect{"int(1) has no key"},
 		},
-		Test{
+		{
 			Title:  "float",
 			Input:  Input{1.2},
 			Expect: Expect{"float64(1.2) has no key"},
 		},
-		Test{
+		{
 			Title:  "string",
 			Input:  Input{"hello"},
 			Expect: Expect{"string(hello) has no key"},
 		},
-		Test{
+		{
 			Title:  "bool",
 			Input:  Input{true},
 			Expect: Expect{"bool(true) has no key"},
 		},
-		Test{
+		{
 			Title:  "time.Time",
 			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{"time.Time(1992-06-18 12:34:56 +0000 UTC) has no key"},
 		},
-		Test{
+		{
 			Title:  "nil",
 			Input:  Input{nil},
 			Expect: Expect{"<nil>(<nil>) has no key"},
@@ -144,32 +144,32 @@ func TestValueAccessor_Unwrap(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title:  "int",
 			Input:  Input{1},
 			Expect: Expect{1},
 		},
-		Test{
+		{
 			Title:  "float",
 			Input:  Input{1.2},
 			Expect: Expect{1.2},
 		},
-		Test{
+		{
 			Title:  "string",
 			Input:  Input{"hello"},
 			Expect: Expect{"hello"},
 		},
-		Test{
+		{
 			Title:  "bool",
 			Input:  Input{true},
 			Expect: Expect{true},
 		},
-		Test{
+		{
 			Title:  "time.Time",
 			Input:  Input{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
 			Expect: Expect{time.Date(1992, 6, 18, 12, 34, 56, 00, time.UTC)},
 		},
-		Test{
+		{
 			Title:  "nil",
 			Input:  Input{nil},
 			Expect: Expect{nil},
@@ -201,7 +201,7 @@ func TestValueAccessor_Foreach(t *testing.T) {
 	}
 
 	table := []Test{
-		Test{
+		{
 			Title: "success",
 			Input: Input{
 				Accessor:     ValueAccessor{1},
@@ -212,7 +212,7 @@ func TestValueAccessor_Foreach(t *testing.T) {
 				ReturnsError: false,
 			},
 		},
-		Test{
+		{
 			Title: "error",
 			Input: Input{
 				Accessor:     ValueAccessor{1},
