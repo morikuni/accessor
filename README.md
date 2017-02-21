@@ -1,6 +1,7 @@
 # accessor
 [![Build Status](https://travis-ci.org/morikuni/accessor.svg?branch=master)](https://travis-ci.org/morikuni/accessor)
 [![GoDoc](https://godoc.org/github.com/morikuni/accessor?status.svg)](https://godoc.org/github.com/morikuni/accessor)
+[![Go Report Card](https://goreportcard.com/badge/github.com/morikuni/accessor)](https://goreportcard.com/report/github.com/morikuni/accessor)
 
 accessor provides accessor for map/slice objects like json, yaml, toml etc.
 
