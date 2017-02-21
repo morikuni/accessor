@@ -39,7 +39,7 @@ func TestValueAccessor_Get(t *testing.T) {
 			Title: "phantom path",
 			Input: Input{
 				Accessor: &ValueAccessor{1},
-				Path:     PhantomPath,
+				Path:     thePhantomPath,
 			},
 			Expect: Expect{
 				Accessor: &ValueAccessor{1},
@@ -94,7 +94,7 @@ func TestValueAccessor_Set(t *testing.T) {
 			Title: "phantom path",
 			Input: Input{
 				Accessor: &ValueAccessor{1},
-				Path:     PhantomPath,
+				Path:     thePhantomPath,
 				BeSet:    2,
 			},
 			Expect: Expect{

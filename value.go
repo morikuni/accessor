@@ -13,7 +13,7 @@ type ValueAccessor struct {
 
 // Get implements Accessor.
 func (a *ValueAccessor) Get(path Path) (Accessor, error) {
-	if path == PhantomPath {
+	if path == thePhantomPath {
 		return a, nil
 	}
 	return nil, NewNoSuchPathError(fmt.Sprintf("%[1]T(%[1]v) has no key", a.Value), path.Key())
@@ -21,7 +21,7 @@ func (a *ValueAccessor) Get(path Path) (Accessor, error) {
 
 // Set implements Accessor.
 func (a *ValueAccessor) Set(path Path, value interface{}) error {
-	if path == PhantomPath {
+	if path == thePhantomPath {
 		a.Value = value
 		return nil
 	}
@@ -35,7 +35,7 @@ func (a *ValueAccessor) Unwrap() interface{} {
 
 // Foreach implements Accessor.
 func (a *ValueAccessor) Foreach(f func(path Path, value interface{}) error) error {
-	return f(PhantomPath, a.Value)
+	return f(thePhantomPath, a.Value)
 }
 
 // MarshalJSON implements encoding/json.Marshaler.

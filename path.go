@@ -54,8 +54,7 @@ func (p *basicPath) String() string {
 	return buf.String()
 }
 
-// PhantomPath is the Path without a key.
-var PhantomPath Path = phantomPath{}
+var thePhantomPath Path = phantomPath{}
 
 type phantomPath struct{}
 
@@ -92,7 +91,7 @@ func NewPath(keys []string) (Path, error) {
 	}
 
 	last := len(keys) - 1
-	p := PhantomPath
+	p := thePhantomPath
 	for i := last; i >= 0; i-- {
 		if keys[i] == "" {
 			return nil, NewInvalidPathError("empty key found")
