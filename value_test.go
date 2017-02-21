@@ -208,7 +208,7 @@ func TestValueAccessor_Foreach(t *testing.T) {
 				ReturnsError: false,
 			},
 			Expect: Expect{
-				Paths:        []string{"?"},
+				Paths:        []string{"???"},
 				ReturnsError: false,
 			},
 		},

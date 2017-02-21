@@ -26,5 +26,5 @@ func (a DummyAccessor) Unwrap() interface{} {
 
 // Foreach implements Accessor.
 func (a DummyAccessor) Foreach(f func(path Path, value interface{}) error) error {
-	return f(initialPath{}, a.ID)
+	return f(PhantomPath, a.ID)
 }

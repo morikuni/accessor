@@ -6,7 +6,7 @@ import (
 
 // NewNoSuchPathError creates a NoSuchPathError.
 func NewNoSuchPathError(message string, key string, keys ...string) *NoSuchPathError {
-	var path Path = initialPath{}
+	path := PhantomPath
 	for _, k := range keys {
 		path = path.PushKey(k)
 	}

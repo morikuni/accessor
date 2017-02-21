@@ -54,25 +54,28 @@ func (p *basicPath) String() string {
 	return buf.String()
 }
 
-type initialPath struct{}
+// PhantomPath is the Path without a key.
+var PhantomPath Path = phantomPath{}
 
-func (p initialPath) PushKey(key string) Path {
+type phantomPath struct{}
+
+func (p phantomPath) PushKey(key string) Path {
 	return &basicPath{
 		key,
 		nil,
 	}
 }
 
-func (p initialPath) Key() string {
-	return ""
+func (p phantomPath) Key() string {
+	return "???"
 }
 
-func (p initialPath) SubPath() (Path, bool) {
+func (p phantomPath) SubPath() (Path, bool) {
 	return nil, false
 }
 
-func (p initialPath) String() string {
-	return "?"
+func (p phantomPath) String() string {
+	return "???"
 }
 
 // ParsePath creates a Path from a slash(/)-separeted-keys.
@@ -89,7 +92,7 @@ func NewPath(keys []string) (Path, error) {
 	}
 
 	last := len(keys) - 1
-	var p Path = initialPath{}
+	p := PhantomPath
 	for i := last; i >= 0; i-- {
 		if keys[i] == "" {
 			return nil, NewInvalidPathError("empty key found")

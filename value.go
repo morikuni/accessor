@@ -28,7 +28,7 @@ func (a ValueAccessor) Unwrap() interface{} {
 
 // Foreach implements Accessor.
 func (a ValueAccessor) Foreach(f func(path Path, value interface{}) error) error {
-	return f(initialPath{}, a.Value)
+	return f(PhantomPath, a.Value)
 }
 
 // MarshalJSON implements encoding/json.Marshaler.
