@@ -40,7 +40,7 @@ type InvalidKeyError struct {
 }
 
 func (e *InvalidKeyError) Error() string {
-	return fmt.Sprintf("%T is not a string", e.Value)
+	return fmt.Sprintf("cannot use %T(%v) as a object key.", e.Value)
 }
 
 // NewInvalidPathError creates a InvalidKeyError.
